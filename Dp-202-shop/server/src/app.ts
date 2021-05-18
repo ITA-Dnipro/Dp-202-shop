@@ -4,14 +4,15 @@ import cors from 'cors';
 import router from './modules';
 import { notFound } from './common/errors/not-found';
 import { errorHandlerMiddleware } from './common/middleware/error-handler.middleware';
-import { sequelizeConnection } from './config/database';
+import { sequelize } from './db/config/db_config';
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
-sequelizeConnection.authenticate()
-  .then(() => console.log(`Database connected on: ${process.env.DB_HOST}:${process.env.DB_PORT}`))
+sequelize.authenticate()
+  .then(() => console.log(`Database connected`))
   .catch(err => console.error('Error: ' + err));
+
 
 const app: Application = express();
 app.use(cors());
