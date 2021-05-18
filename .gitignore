@@ -1,3 +1,19 @@
-/auth-service/node_modules/
-/auth-service/server/dist/
-/auth-service/server/node_modules/
+# dependencies
+./Dp-202-shop/server/node_modules/
+./Dp-202-shop/server/dist/
+./Dp-202-shop/node_modules/
+
+#cache
+.eslintcache
+
+# production
+./Dp-202-shop/server/.env
+
+.idea/
+*.iml
+*.xml
+
+# testing
+/coverage
+
+npm-debug.log*
