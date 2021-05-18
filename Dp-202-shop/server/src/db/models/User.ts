@@ -1,6 +1,7 @@
 import * as Sequelize from 'sequelize';
 import { ProductAttributes, ProductInstance } from "./Product";
 import { SequelizeAttributes } from '../typings/SequelizeAttribetes';
+import {OrderAttributes, OrderInstance} from "./Order";
 
 export interface UserAttributes {
   login: string;
@@ -15,6 +16,7 @@ export interface UserAttributes {
 
 // @ts-ignore
 export interface UserInstance extends Sequelize.Instance<UserAttributes>, UserAttributes {
+  // User.hasMany(models.Product)
   getProducts: Sequelize.HasManyGetAssociationsMixin<ProductInstance>;
   setProducts: Sequelize.HasManySetAssociationsMixin<ProductInstance, ProductInstance['id']>;
   addProducts: Sequelize.HasManyAddAssociationsMixin<ProductInstance, ProductInstance['id']>;
@@ -25,6 +27,28 @@ export interface UserInstance extends Sequelize.Instance<UserAttributes>, UserAt
   hasProduct: Sequelize.HasManyHasAssociationMixin<ProductInstance, ProductInstance['id']>;
   hasProducts: Sequelize.HasManyHasAssociationsMixin<ProductInstance, ProductInstance['id']>;
   countProducts: Sequelize.HasManyCountAssociationsMixin;
+  // User.hasMany(models.Order): salesman_id
+  getSellers: Sequelize.HasManyGetAssociationsMixin<OrderInstance>;
+  setSellers: Sequelize.HasManySetAssociationsMixin<OrderInstance, OrderInstance['id']>;
+  addSellers: Sequelize.HasManyAddAssociationsMixin<OrderInstance, OrderInstance['id']>;
+  addSeller: Sequelize.HasManyAddAssociationMixin<OrderInstance, OrderInstance['id']>;
+  createSeller: Sequelize.HasManyCreateAssociationMixin<OrderAttributes>; //? , ProductInstance>
+  removeSeller: Sequelize.HasManyRemoveAssociationMixin<OrderInstance, OrderInstance['id']>;
+  removeSellers: Sequelize.HasManyRemoveAssociationsMixin<OrderInstance, OrderInstance['id']>;
+  hasSeller: Sequelize.HasManyHasAssociationMixin<OrderInstance, OrderInstance['id']>;
+  hasSellers: Sequelize.HasManyHasAssociationsMixin<OrderInstance, OrderInstance['id']>;
+  countSellers: Sequelize.HasManyCountAssociationsMixin;
+  // User.hasMany(models.Order): buyer_id
+  getBuyers: Sequelize.HasManyGetAssociationsMixin<OrderInstance>;
+  setBuyers: Sequelize.HasManySetAssociationsMixin<OrderInstance, OrderInstance['id']>;
+  addBuyers: Sequelize.HasManyAddAssociationsMixin<OrderInstance, OrderInstance['id']>;
+  addBuyer: Sequelize.HasManyAddAssociationMixin<OrderInstance, OrderInstance['id']>;
+  createBuyer: Sequelize.HasManyCreateAssociationMixin<OrderAttributes>; //? , ProductInstance>
+  removeBuyer: Sequelize.HasManyRemoveAssociationMixin<OrderInstance, OrderInstance['id']>;
+  removeBuyers: Sequelize.HasManyRemoveAssociationsMixin<OrderInstance, OrderInstance['id']>;
+  hasBuyer: Sequelize.HasManyHasAssociationMixin<OrderInstance, OrderInstance['id']>;
+  hasBuyers: Sequelize.HasManyHasAssociationsMixin<OrderInstance, OrderInstance['id']>;
+  countBuyers: Sequelize.HasManyCountAssociationsMixin;
 }
 
 export const UserFactory = (sequelize: Sequelize.Sequelize): Sequelize.Model<UserInstance, UserAttributes> => {
@@ -68,7 +92,8 @@ export const UserFactory = (sequelize: Sequelize.Sequelize): Sequelize.Model<Use
   const User = sequelize.define<UserInstance, UserAttributes>('User', attributes);
 
   User.associate = models => {
-    User.hasMany(models.Products);
+    User.hasMany(models.Product);
+    User.hasMany(models.Order);
   };
 
   return User;

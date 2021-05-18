@@ -1,9 +1,5 @@
 'use strict';
-// const fs = require('fs');
-// const path = require('path');
-// const Sequelize = require('sequelize');
 import * as Sequelize from 'sequelize';
-// const basename = path.basename(__filename);
 const sequelize = require('../config/db_config');
 import { DbInterface } from'../typings/DbInterface';
 import { CategoryFactory } from './Category';
@@ -11,6 +7,8 @@ import { UnitFactory } from './Unit';
 import { ManufactureFactory } from './Manufacture';
 import { UserFactory } from './User';
 import { ProductFactory } from './Product';
+import { OrderFactory } from './Order';
+import { OrderItemFactory } from './OrderItem';
 
   const db: DbInterface = {
     sequelize,
@@ -19,7 +17,9 @@ import { ProductFactory } from './Product';
     Unit: UnitFactory(sequelize),
     Manufacture: ManufactureFactory(sequelize),
     Product: ProductFactory(sequelize),
-    User: UserFactory(sequelize)
+    User: UserFactory(sequelize),
+    Order: OrderFactory(sequelize),
+    OrderItem: OrderItemFactory(sequelize)
   };
 
   Object.keys(db).forEach(modelName => {

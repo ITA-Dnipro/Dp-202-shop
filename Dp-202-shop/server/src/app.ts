@@ -4,7 +4,7 @@ import cors from 'cors';
 import router from './modules';
 import { notFound } from './common/errors/not-found';
 import { errorHandlerMiddleware } from './common/middleware/error-handler.middleware';
-import { sequelize } from './db/config/db_config';
+import sequelize  from './db/config/db_config';
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;

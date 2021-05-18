@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-dotenv.config({path:__dirname+'/../../.env'});
+const dotenv = require('dotenv');
+dotenv.config({path:__dirname+'/../../../.env'});
 
 module.exports = {
   development: {
@@ -8,7 +8,7 @@ module.exports = {
     database: process.env.DEV_DB_DATABASE,
     host: process.env.DEV_DB_HOST,
     port: process.env.DEV_DB_PORT,
-    dialect: 'postgres',
+    dialect: process.env.DEV_DB_DIALECT,
     dialectOptions: {
       bigNumberStrings: true
     }

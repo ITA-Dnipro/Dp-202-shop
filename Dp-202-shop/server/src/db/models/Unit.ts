@@ -1,6 +1,4 @@
 import *as Sequelize from 'sequelize';
-// import { CommentAttributes, CommentInstance } from 'models/Comment';
-// import { PostAttributes, PostInstance } from 'models/Post';
 import { SequelizeAttributes } from '../typings/SequelizeAttribetes';
 import {ProductAttributes, ProductInstance} from "./Product";
 

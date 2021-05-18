@@ -15,7 +15,7 @@ export interface ManufactureInstance extends Sequelize.Instance<ManufactureAttri
   setProducts: Sequelize.HasManySetAssociationsMixin<ProductInstance, ProductInstance['id']>;
   addProducts: Sequelize.HasManyAddAssociationsMixin<ProductInstance, ProductInstance['id']>;
   addProduct: Sequelize.HasManyAddAssociationMixin<ProductInstance, ProductInstance['id']>;
-  createProduct: Sequelize.HasManyCreateAssociationMixin<ProductAttributes>; //? , ProductInstance>
+  createProduct: Sequelize.HasManyCreateAssociationMixin<ProductAttributes>;
   removeProduct: Sequelize.HasManyRemoveAssociationMixin<ProductInstance, ProductInstance['id']>;
   removeProducts: Sequelize.HasManyRemoveAssociationsMixin<ProductInstance, ProductInstance['id']>;
   hasProduct: Sequelize.HasManyHasAssociationMixin<ProductInstance, ProductInstance['id']>;

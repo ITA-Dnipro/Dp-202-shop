@@ -4,6 +4,7 @@ import { CategoryAttributes, CategoryInstance } from './Category';
 import { UnitAttributes, UnitInstance } from './Unit';
 import { ManufactureAttributes, ManufactureInstance } from './Manufacture';
 import { UserAttributes, UserInstance } from './User';
+import { OrderItemAttributes, OrderItemInstance } from './OrderItem';
 
 export interface ProductAttributes {
   vendor_code: number;
@@ -18,6 +19,7 @@ export interface ProductAttributes {
 
 // @ts-ignore
 export interface ProductInstance extends Sequelize.Instance<ProductAttributes>, ProductAttributes {
+  // belongsTo: Unit, Category, Manufacture, User
   getCategory: Sequelize.BelongsToGetAssociationMixin<CategoryInstance>;
   setCategory: Sequelize.BelongsToSetAssociationMixin<CategoryInstance, CategoryInstance['id']>;
   createCategory: Sequelize.BelongsToCreateAssociationMixin<CategoryAttributes>;
@@ -30,6 +32,17 @@ export interface ProductInstance extends Sequelize.Instance<ProductAttributes>, 
   getUser: Sequelize.BelongsToGetAssociationMixin<UserInstance>;
   setUser: Sequelize.BelongsToSetAssociationMixin<UserInstance, UserInstance['id']>;
   createUser: Sequelize.BelongsToCreateAssociationMixin<UserAttributes>;
+  // has many: OrderItem
+  getOrderItems: Sequelize.HasManyGetAssociationsMixin<OrderItemInstance>;
+  setOrderItems: Sequelize.HasManySetAssociationsMixin<OrderItemInstance, OrderItemInstance['id']>;
+  addOrderItems: Sequelize.HasManyAddAssociationsMixin<OrderItemInstance, OrderItemInstance['id']>;
+  addOrderItem: Sequelize.HasManyAddAssociationMixin<OrderItemInstance, OrderItemInstance['id']>;
+  createOrderItem: Sequelize.HasManyCreateAssociationMixin<OrderItemAttributes>;
+  removeOrderItem: Sequelize.HasManyRemoveAssociationMixin<OrderItemInstance, ProductInstance['id']>;
+  removeOrderItems: Sequelize.HasManyRemoveAssociationsMixin<OrderItemInstance, OrderItemInstance['id']>;
+  hasOrderItem: Sequelize.HasManyHasAssociationMixin<OrderItemInstance, OrderItemInstance['id']>;
+  hasOrderItems: Sequelize.HasManyHasAssociationsMixin<OrderItemInstance, OrderItemInstance['id']>;
+  countOrderItems: Sequelize.HasManyCountAssociationsMixin;
 }
 
 export const ProductFactory = (sequelize: Sequelize.Sequelize): Sequelize.Model<ProductInstance, ProductAttributes> => {
