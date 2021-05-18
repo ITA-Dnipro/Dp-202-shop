@@ -1,5 +1,5 @@
 {
-  "name": "auth_service",
+  "name": "Dp-202-shop",
   "version": "1.0.0",
   "description": "server",
   "main": "index.js",
@@ -11,14 +11,36 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/froz-ferre/auth-service.git"
+    "url": "https://github.com/ITA-Dnipro/Dp-202-shop/"
   },
-  "author": "ferre",
+  "contributors": [
+    {
+      "name": "Allegr@"
+    },
+    {
+      "name": "CurlyAnastasi"
+    },
+    {
+      "name": "DianaBondarenko"
+    },
+    {
+      "name": "froz-ferre"
+    },
+    {
+      "name": "katerinassh"
+    },
+    {
+      "name": "ShumerPlema"
+    },
+    {
+      "name": "valeriia-danylenko"
+    }
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/froz-ferre/auth-service/issues"
+    "url": "https://github.com/ITA-Dnipro/Dp-202-shop/issues"
   },
-  "homepage": "https://github.com/froz-ferre/auth-service#readme",
+  "homepage": "https://github.com/ITA-Dnipro/Dp-202-shop#readme",
   "devDependencies": {
     "@tsconfig/node14": "^1.0.0",
     "@types/core-js": "^2.5.4",
