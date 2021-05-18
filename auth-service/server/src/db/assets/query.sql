@@ -1,0 +1,65 @@
+CREATE DATABASE node_db;
+CONNECT node_db; -- \c
+
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL PRIMARY KEY,
+  firstname VARCHAR(50) NOT NULL CHECK(firstname != ''),
+  lastname VARCHAR(50),
+  email VARCHAR(100) UNIQUE NOT NULL CHECK(email != ''),
+  login VARCHAR(50) UNIQUE NOT NULL CHECK(login != ''),
+  password VARCHAR(30) NOT NULL CHECK(password != ''),
+  birthday DATE,
+  created TIMESTAMP,
+  img VARCHAR(250),
+  phone VARCHAR(13) UNIQUE NOT NULL CHECK(phone != '')
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+	id SERIAL PRIMARY KEY,
+	created TIMESTAMP NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS order_details (
+	id SERIAL PRIMARY KEY,
+	quantity INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS manufactures (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(250) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS categories (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(250) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS products (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(250) NOT NULL CHECK(name != ''),
+	amount INTEGER NOT NULL,
+	ingredients VARCHAR(1000),
+	img VARCHAR(250),
+	price NUMERIC NOT NULL,
+	units VARCHAR(50) NOT NULL
+);
+
+ALTER TABLE products ADD COLUMN
+manufacture_id INTEGER REFERENCES manufactures(id)
+ON DELETE CASCADE;
+
+ALTER TABLE products ADD COLUMN
+category_id INTEGER REFERENCES categories(id)
+ON DELETE CASCADE;
+
+ALTER TABLE order_details ADD COLUMN
+product_id INTEGER REFERENCES products(id)
+ON DELETE CASCADE;
+
+ALTER TABLE order_details ADD COLUMN
+order_id INTEGER REFERENCES orders(id)
+ON DELETE CASCADE;
+
+ALTER TABLE orders ADD COLUMN
+user_id INTEGER REFERENCES users(id)
+ON DELETE CASCADE;
