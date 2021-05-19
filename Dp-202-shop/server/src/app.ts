@@ -4,7 +4,9 @@ import cors from 'cors';
 import router from './modules';
 import { notFound } from './common/errors/not-found';
 import { errorHandlerMiddleware } from './common/middleware/error-handler.middleware';
-import sequelize  from "./db/config/db_config";
+// @ts-ignore
+import sequelize  from "./db/models/index";
+
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -12,7 +14,6 @@ const PORT = process.env.PORT || 3000;
 sequelize.authenticate()
   .then(() => console.log(`Database connected`))
   .catch(err => console.error(`Error: ${err}`));
-
 
 const app: Application = express();
 app.use(cors());

@@ -1,7 +1,5 @@
-import dotenv from 'dotenv';
-const __dirname = '';
-dotenv.config({path: __dirname + '../../../.env'});
-
+const dotenv = require('dotenv');
+dotenv.config({path: __dirname + '/../../../.env'});
 
 const config = {
   development: {
@@ -13,7 +11,7 @@ const config = {
     dialect: process.env.DEV_DB_DIALECT,
     dialectOptions: {
       bigNumberStrings: true
-    }
+    },
   },
   test: {
     username: process.env.CI_DB_USER,
@@ -35,11 +33,8 @@ const config = {
     dialect: process.env.PROD_DB_DIALECT,
     dialectOptions: {
       bigNumberStrings: true,
-      ssl: {
-        // ca: fs.readFileSync(__dirname + '/postgres-ca-master.crt')
-      }
     }
   }
 };
-console.log(config)
-export default config;
+// export default config;
+module.exports = config;

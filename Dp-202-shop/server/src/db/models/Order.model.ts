@@ -24,7 +24,7 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> {
     type: DataType.INTEGER(),
     allowNull: false,
   })
-  buyer_d: number;
+  buyer_id: number;
   @BelongsTo(() => User)
   buyer: User;
 
@@ -33,7 +33,7 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> {
     type: DataType.INTEGER(),
     allowNull: false,
   })
-  salesman_d: number;
+  salesman_id: number;
   @BelongsTo(() => User)
   salesman: User;
 

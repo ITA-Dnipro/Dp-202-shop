@@ -11,5 +11,5 @@ router.post(
   validator.headers(productHeaderSchema),
   authMiddleware,
   validator.body(productBodySchema),
-  orderController.create
+  // orderController.create
 );

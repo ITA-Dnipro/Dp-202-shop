@@ -22,7 +22,7 @@ export class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttri
     type: DataType.INTEGER(),
     allowNull: false,
   })
-  order_d: number;
+  order_id: number;
   @BelongsTo(() => Order)
   order: Order;
 

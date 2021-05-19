@@ -41,7 +41,6 @@
     "url": "https://github.com/ITA-Dnipro/Dp-202-shop/issues"
   },
   "module": "commonjs",
-  "type": "module",
   "homepage": "https://github.com/ITA-Dnipro/Dp-202-shop#readme",
   "devDependencies": {
     "@tsconfig/node14": "^1.0.0",
@@ -68,6 +67,7 @@
     "pg-hstore": "^2.3.3",
     "reflect-metadata": "^0.1.13",
     "sequelize": "^6.6.2",
+    "sequelize-auto-migrations": "^1.0.3",
     "sequelize-cli-typescript": "^3.2.0-c",
     "sequelize-typescript": "^2.1.0"
   }

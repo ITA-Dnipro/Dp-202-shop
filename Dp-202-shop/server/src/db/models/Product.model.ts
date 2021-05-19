@@ -33,7 +33,7 @@ export class Product extends Model<ProductAttributes, ProductCreationAttributes>
     type: DataType.INTEGER(),
     allowNull: false,
   })
-  unit_d: number;
+  unit_id: number;
   @BelongsTo(() => Unit)
   unit: Unit;
 
@@ -42,7 +42,7 @@ export class Product extends Model<ProductAttributes, ProductCreationAttributes>
     type: DataType.INTEGER(),
     allowNull: false,
   })
-  manufacture_d: number;
+  manufacture_id: number;
   @BelongsTo(() => Manufacture)
   manufacture: Manufacture;
 
@@ -51,7 +51,7 @@ export class Product extends Model<ProductAttributes, ProductCreationAttributes>
     type: DataType.INTEGER(),
     allowNull: false,
   })
-  category_d: number;
+  category_id: number;
   @BelongsTo(() => Category)
   category: Category;
 
@@ -60,47 +60,47 @@ export class Product extends Model<ProductAttributes, ProductCreationAttributes>
     type: DataType.INTEGER(),
     allowNull: false,
   })
-  user_d: number;
+  user_id: number;
   @BelongsTo(() => User)
   user: User;
 
   @Column({
-    type: Sequelize.INTEGER,
+    type: DataType.INTEGER(),
   })
   vendor_code: number;
 
   @Column({
-    type: Sequelize.STRING,
+    type: DataType.STRING(),
     allowNull: false,
   })
   product_name: string;
 
   @Column({
-    type: Sequelize.INTEGER,
+    type: DataType.INTEGER(),
     allowNull: false,
   })
   amount: number;
 
   @Column({
-    type: Sequelize.REAL,
+    type: DataType.REAL(),
     allowNull: false,
   })
   price: number;
 
   @Column({
-    type: Sequelize.TEXT,
+    type: DataType.TEXT(),
     allowNull: true,
   })
   ingredients: string;
 
   @Column({
-    type: Sequelize.TEXT,
+    type: DataType.TEXT(),
   })
   img: string;
 
   @Default(false)
   @Column({
-    type: Sequelize.BOOLEAN,
+    type: DataType.BOOLEAN,
   })
   deleted: boolean;
 

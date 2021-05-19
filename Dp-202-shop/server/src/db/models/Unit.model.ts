@@ -1,5 +1,5 @@
-import {default as Sequelize, Optional} from 'sequelize';
-import {Table, Column, Model, HasMany, UpdatedAt, CreatedAt, DataType, ForeignKey, Unique} from 'sequelize-typescript';
+import { Optional} from 'sequelize';
+import {Table, Column, Model, HasMany, UpdatedAt, CreatedAt, Unique} from 'sequelize-typescript';
 import {Product} from "./Product.model";
 
 
