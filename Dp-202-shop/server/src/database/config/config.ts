@@ -13,7 +13,10 @@ const config = {
     dialect: process.env.DEV_DB_DIALECT,
     dialectOptions: {
       bigNumberStrings: true
-    }
+    },
+    migrationStorage: "json",
+    migrationStoragePath: "sequelizeMeta.json",
+    migrationStorageTableName: "sequelize_meta"
   },
   test: {
     username: process.env.CI_DB_USER,

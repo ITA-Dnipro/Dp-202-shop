@@ -2,6 +2,7 @@ import * as Sequelize from 'sequelize';
 import {SequelizeAttributes} from '../typings/SequelizeAttribetes';
 import {UserAttributes, UserInstance} from "./User";
 import {OrderItemAttributes, OrderItemInstance} from "./OrderItem";
+import {ManufactureAttributes} from "./Manufacture";
 
 export interface OrderAttributes {
   total_sum: number;
@@ -10,6 +11,8 @@ export interface OrderAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export  type OrderCreateAttributes = Pick<OrderAttributes, 'total_sum'>
 
 // @ts-ignore
 export interface OrderInstance extends Sequelize.Instance<OrderAttributes>, OrderAttributes {
@@ -53,15 +56,15 @@ export const OrderFactory = (sequelize: Sequelize.Sequelize): Sequelize.Model<Or
   };
 
   // @ts-ignore
-  const Order = sequelize.define<OrderInstance, OrderAttributes>('Order', attributes);
+  return sequelize.define<OrderInstance, OrderAttributes>('Order', attributes);
 
-  Order.associate = models => {
-    Order.hasMany(models.OrderItem);
-    Order.belongsTo(models.User, { as: 'salesman', foreignKey: 'salesman_id' });
-    Order.belongsTo(models.User, { as: 'buyer', foreignKey: 'buyer_id' });
-  };
-
-  return Order;
+  // Order.associate = models => {
+  //   Order.hasMany(models.OrderItem);
+  //   Order.belongsTo(models.User, { as: 'salesman', foreignKey: 'salesman_id' });
+  //   Order.belongsTo(models.User, { as: 'buyer', foreignKey: 'buyer_id' });
+  // };
+  //
+  // return Order;
 };
 
 

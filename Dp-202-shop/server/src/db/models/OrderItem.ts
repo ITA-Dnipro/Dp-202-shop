@@ -38,14 +38,14 @@ export const OrderItemFactory = (sequelize: Sequelize.Sequelize): Sequelize.Mode
   };
 
   // @ts-ignore
-  const OrderItem = sequelize.define<OrderItemInstance, OrderItemAttributes>('OrderItem', attributes);
+  return sequelize.define<OrderItemInstance, OrderItemAttributes>('OrderItem', attributes);
 
-  OrderItem.associate = models => {
-    OrderItem.belongsTo(models.Product, { as: 'product', foreignKey: 'product_id' });
-    OrderItem.belongsTo(models.Order, { as: 'order', foreignKey: 'order_id' })
-  };
-
-  return OrderItem;
+  // OrderItem.associate = models => {
+  //   OrderItem.belongsTo(models.Product, { as: 'product', foreignKey: 'product_id' });
+  //   OrderItem.belongsTo(models.Order, { as: 'order', foreignKey: 'order_id' })
+  // };
+  //
+  // return OrderItem;
 };
 
 // const getOrderItemModel = (sequelize, DataTypes) => {

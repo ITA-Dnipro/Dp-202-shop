@@ -84,16 +84,16 @@ export const ProductFactory = (sequelize: Sequelize.Sequelize): Sequelize.Model<
   };
 
   // @ts-ignore
-  const Product = sequelize.define<ProductInstance, ProductAttributes>('Product', attributes);
+  return sequelize.define<ProductInstance, ProductAttributes>('Product', attributes);
 
-  Product.associate = models => {
-    Product.belongsTo(models.Category, { as: 'category', foreignKey: 'category_id' });
-    Product.belongsTo(models.Unit, { as: 'unit', foreignKey: 'unit_id' });
-    Product.belongsTo(models.Manufacture, { as: 'manufacture', foreignKey: 'manufacture_id' });
-    Product.belongsTo(models.User, { as: 'user', foreignKey: 'user_id' });
-  };
-
-  return Product;
+  // Product.associate = models => {
+  //   Product.belongsTo(models.Category, { as: 'category', foreignKey: 'category_id' });
+  //   Product.belongsTo(models.Unit, { as: 'unit', foreignKey: 'unit_id' });
+  //   Product.belongsTo(models.Manufacture, { as: 'manufacture', foreignKey: 'manufacture_id' });
+  //   Product.belongsTo(models.User, { as: 'user', foreignKey: 'user_id' });
+  // };
+  //
+  // return Product;
 };
 
 

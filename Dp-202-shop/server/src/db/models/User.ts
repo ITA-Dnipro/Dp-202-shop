@@ -80,7 +80,7 @@ export const UserFactory = (sequelize: Sequelize.Sequelize): Sequelize.Model<Use
       allowNull: false,
     },
     balance: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.REAL,
     },
     role: {
       type: Sequelize.ENUM('client', 'salesman', 'admin'),
@@ -89,14 +89,14 @@ export const UserFactory = (sequelize: Sequelize.Sequelize): Sequelize.Model<Use
   };
 
   // @ts-ignore
-  const User = sequelize.define<UserInstance, UserAttributes>('User', attributes);
+  return sequelize.define<UserInstance, UserAttributes>('User', attributes);
 
-  User.associate = models => {
-    User.hasMany(models.Product);
-    User.hasMany(models.Order);
-  };
-
-  return User;
+  // User.associate = models => {
+  //   User.hasMany(models.Product);
+  //   User.hasMany(models.Order);
+  // };
+  //
+  // return User;
 };
 
 // const getUserModel = (sequelize, DataTypes) => {

@@ -1,6 +1,9 @@
 import * as Sequelize from 'sequelize';
 import {ProductAttributes, ProductInstance} from "./Product";
 import {SequelizeAttributes} from '../typings/SequelizeAttribetes';
+// const Sequelize  = require('sequelize');
+// const { ProductAttributes, ProductInstance } = require("./Product");
+// const {SequelizeAttributes} = require('../typings/SequelizeAttribetes');
 
 export interface CategoryAttributes {
   id?: number;
@@ -9,13 +12,15 @@ export interface CategoryAttributes {
   updatedAt?: Date;
 }
 
+export type CategoryCreateAttributes = Pick<CategoryAttributes, 'category'>
+
 // @ts-ignore
 export interface CategoryInstance extends Sequelize.Instance<CategoryAttributes>, CategoryAttributes {
   getProducts: Sequelize.HasManyGetAssociationsMixin<ProductInstance>;
   setProducts: Sequelize.HasManySetAssociationsMixin<ProductInstance, ProductInstance['id']>;
   addProducts: Sequelize.HasManyAddAssociationsMixin<ProductInstance, ProductInstance['id']>;
   addProduct: Sequelize.HasManyAddAssociationMixin<ProductInstance, ProductInstance['id']>;
-  createProduct: Sequelize.HasManyCreateAssociationMixin<ProductAttributes>; //? , ProductInstance>
+  createProduct: Sequelize.HasManyCreateAssociationMixin<ProductAttributes>;
   removeProduct: Sequelize.HasManyRemoveAssociationMixin<ProductInstance, ProductInstance['id']>;
   removeProducts: Sequelize.HasManyRemoveAssociationsMixin<ProductInstance, ProductInstance['id']>;
   hasProduct: Sequelize.HasManyHasAssociationMixin<ProductInstance, ProductInstance['id']>;
@@ -40,51 +45,14 @@ export const CategoryFactory = (sequelize: Sequelize.Sequelize): Sequelize.Model
   };
 
   // @ts-ignore
-  const Category = sequelize.define<CategoryInstance, CategoryAttributes>('Category', attributes);
+  return sequelize.define<CategoryInstance, CategoryAttributes>('Category', attributes);
 
-  Category.associate = models => {
-    Category.hasMany(models.Products);
-  };
+  // Category.associate = models => {
+  //   Category.hasMany(models.Products);
+  // };
 
-  return Category;
+  // return Category;
 };
-
-
-// export interface UserAttributes {
-//   id: number;
-//   category: string;
-//   createdAt?: Date;
-//   updatedAt?: Date;
-// }
-//
-// export interface CategoryInstance extends Sequelize.Instance<CategoryAttributes>, CategoryAttributes {
-//   // At the moment, there's nothing more to add apart
-//   // from the methods and attributes that the types
-//   // `Sequelize.Instance<UserAttributes>` and
-//   // `UserAttributes` give us. We'll add more here when
-//   //  we get on to adding associations.
-// };
-//
-// export const getCategoryModel = (sequelize: Sequelize, DataTypes: Sequelize.DataTypes): Model<CategoryInstance, CategoryAttributes> => {
-//   const attributes: SequelizeAttributes<CategoryAttributes> = {
-//     id: {
-//       type: DataTypes.INTEGER,
-//       autoIncrement: true,
-//       primaryKey: true,
-//       allowNull: false,
-//       unique: true
-//     },
-//     category: {
-//       type: DataTypes.STRING,
-//       allowNull: false,
-//       unique: true
-//     }
-//   };
-//
-//   const Category = sequelize.define<CategoryInstance, UserAttributes>('Category', attributes);
-//
-//   return Category;
-// };
 
 
 // const getCategoryModel = (sequelize, DataTypes) => {

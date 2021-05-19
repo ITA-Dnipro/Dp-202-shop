@@ -50,13 +50,13 @@ export const UnitFactory = (sequelize: Sequelize.Sequelize): Sequelize.Model<Uni
   };
 
   // @ts-ignore
-  const Unit = sequelize.define<UnitInstance, UnitAttributes>('Unit', attributes);
-
-  Unit.associate = models => {
-    Unit.hasMany(models.Products);
-  };
-
-  return Unit;
+  return sequelize.define<UnitInstance, UnitAttributes>('Unit', attributes);
+  //
+  // Unit.associate = models => {
+  //   Unit.hasMany(models.Products);
+  // };
+  //
+  // return Unit;
 };
 
 // const getUnitModel = (sequelize, DataTypes) => {

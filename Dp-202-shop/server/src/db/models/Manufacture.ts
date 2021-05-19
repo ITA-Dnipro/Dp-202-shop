@@ -1,6 +1,7 @@
 import * as Sequelize from 'sequelize';
 import { SequelizeAttributes } from '../typings/SequelizeAttribetes';
 import {ProductAttributes, ProductInstance} from "./Product";
+import {CategoryAttributes} from "./Category";
 
 export interface ManufactureAttributes {
   manufacture: string;
@@ -8,6 +9,8 @@ export interface ManufactureAttributes {
   createdAt?: Date;
   updatedAt?: Date;
 }
+
+export  type ManufactureCreateAttributes = Pick<ManufactureAttributes, 'manufacture'>
 
 // @ts-ignore
 export interface ManufactureInstance extends Sequelize.Instance<ManufactureAttributes>, ManufactureAttributes {
@@ -40,13 +43,13 @@ export const ManufactureFactory = (sequelize: Sequelize.Sequelize): Sequelize.Mo
   };
 
   // @ts-ignore
-  const Manufacture = sequelize.define<ManufactureInstance, ManufactureAttributes>('Manufacture', attributes);
+  return sequelize.define<ManufactureInstance, ManufactureAttributes>('Manufacture', attributes);
 
-  Manufacture.associate = models => {
-    Manufacture.hasMany(models.Products);
-  };
+  // Manufacture.associate = models => {
+  //   Manufacture.hasMany(models.Products);
+  // };
 
-  return Manufacture;
+  // return Manufacture;
 };
 
 
