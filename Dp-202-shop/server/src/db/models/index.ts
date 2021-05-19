@@ -16,5 +16,4 @@ const sequelize = new Sequelize(mode.database, mode.username, mode.password, {
 
 sequelize.addModels([__dirname + '/**/*.model.ts']);
 
-// export default sequelize;
 module.exports = sequelize;
