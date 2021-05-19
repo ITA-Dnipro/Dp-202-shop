@@ -57,7 +57,6 @@ export class User extends Model<UserAttributes, UserCreationAttributes> {
   @Default('client')
   @Column({
     type: DataType.ENUM('client', 'salesman', 'admin'),
-    allowNull: false,
   })
   role: string;
 
