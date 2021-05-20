@@ -3,6 +3,6 @@ import { productsController } from './product.controller';
 
 export const router = express.Router();
 
-// router.get('/', productsController.getAll);
+router.get('/', productsController.getAll);
 // router.get('/search', productsController.getByQuery);
-// router.get('/:id', productsController.getOne);
+router.get('/:id', productsController.getOne);

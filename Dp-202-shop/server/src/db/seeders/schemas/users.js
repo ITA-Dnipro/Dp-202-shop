@@ -10,7 +10,7 @@ module.exports = [
     "phone": "380964112365"
   },
   {
-    "role": 'admin',
+    "role": 'salesman',
     "email": "petya@gmail.com",
     "login": "petya",
     "password": "PetrVelikii",
@@ -37,7 +37,7 @@ module.exports = [
     "phone": "380557113355"
   },
   {
-    "role": 'client',
+    "role": 'salesman',
     "email": "ivan@gmail.com",
     "login": "ivan",
     "password": "ivan1234",
@@ -55,7 +55,7 @@ module.exports = [
     "phone": "380554326594"
   },
   {
-    "role": 'salesman',
+    "role": 'admin',
     "email": "lera@gmail.com",
     "login": "lera",
     "password": "PassWord12",
