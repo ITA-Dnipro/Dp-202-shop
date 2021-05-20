@@ -1,4 +1,4 @@
-import {Optional, default as Sequelize} from 'sequelize';
+import {Optional} from 'sequelize';
 import {Table, Column, Model, HasMany, UpdatedAt, CreatedAt, DataType, ForeignKey, BelongsTo, Default} from 'sequelize-typescript';
 import {Unit} from "./Unit.model";
 import {User} from "./User.model";
@@ -23,7 +23,6 @@ interface ProductAttributes {
 interface ProductCreationAttributes extends Optional<ProductAttributes, 'id'> {
 }
 
-// @ts-ignore
 @Table({tableName: 'products'})
 export class Product extends Model<ProductAttributes, ProductCreationAttributes> {
   public static readonly tableName: string = 'products';

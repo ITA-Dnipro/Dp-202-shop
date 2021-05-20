@@ -5,7 +5,7 @@ import router from './modules';
 import { notFound } from './common/errors/not-found';
 import { errorHandlerMiddleware } from './common/middleware/error-handler.middleware';
 // @ts-ignore
-import sequelize  from "./db/models/index";
+import sequelize  from "./db/config/db";
 
 
 dotenv.config();

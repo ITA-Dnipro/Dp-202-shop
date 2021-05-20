@@ -3,7 +3,7 @@ import { ValidationObject, Validator } from '../../common/validators/validator';
 import { BaseView } from '../../common/views/view';
 import { ApiError } from '../../common/errors/api-errors';
 // import { orderModel } from './order.model';
-import { IProductRequestSchema } from './order.schema';
+import { IProductRequestSchema } from '../../common/dtos/order.schema';
 import { ValidatedRequest } from 'express-joi-validation';
 
 

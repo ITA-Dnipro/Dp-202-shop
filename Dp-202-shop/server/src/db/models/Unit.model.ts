@@ -37,3 +37,4 @@ export class Unit extends Model<UnitAttributes, UnitCreationAttributes> {
   @HasMany(() => Product)
   products: Product[];
 }
+

@@ -1,6 +1,6 @@
 import express from 'express';
 import { orderController } from './order.controller';
-import { productBodySchema, productHeaderSchema, validator } from './order.schema';
+import { productBodySchema, productHeaderSchema, validator } from '../../common/dtos/order.schema';
 import { authMiddleware } from '../../common/middleware/auth.middleware';
 
 

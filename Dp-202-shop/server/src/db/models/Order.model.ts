@@ -1,6 +1,5 @@
 import { Optional } from 'sequelize';
 import {Table, Column, Model, HasMany, UpdatedAt, CreatedAt, DataType, ForeignKey, BelongsTo, Default} from 'sequelize-typescript';
-import {Product} from "./Product.model";
 import {User} from "./User.model";
 import {OrderItem} from "./OrderItem.model";
 

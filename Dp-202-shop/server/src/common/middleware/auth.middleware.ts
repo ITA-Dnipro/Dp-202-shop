@@ -1,4 +1,4 @@
-import { IProductRequestSchema } from '../../modules/orders/order.schema';
+import { IProductRequestSchema } from '../dtos/order.schema';
 import { ValidatedRequest } from 'express-joi-validation';
 import { NextFunction, Response } from 'express';
 import { userModel } from '../../modules/users/user.model';
