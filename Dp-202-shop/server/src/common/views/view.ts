@@ -13,14 +13,14 @@ export class BaseView {
     return res.json(response);
   }
 
-  public static buildErrorView(res: Response, error: Error | ApiError): Response {
-    const response = {
-      status: 'fail',
-      data: [],
-      message: error.message
-    };
-    const status = error instanceof ApiError ? error.status : 500;
+  // public static buildErrorView(res: Response, error: Error | ApiError): Response {
+  //   const response = {
+  //     status: 'fail',
+  //     data: [],
+  //     message: error.message
+  //   };
+  //   const status = error instanceof ApiError ? error.status : 500;
 
-    return res.status(status).json(response);
-  }
+  //   return res.status(status).json(response);
+  // }
 }

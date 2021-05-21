@@ -1,3 +1,4 @@
+import { CustomError } from '../errors/customError';
 export interface IErrorObject {
   reason: string;
 }
@@ -7,17 +8,12 @@ export type ValidationObject = IErrorObject | null;
 export class Validator {
   public static isNumber(data): ValidationObject {
     if (!data) {
-      return {reason: 'Data is absent'};
+      throw new CustomError ([], 'Data is absent')
     }
 
     if (/\D/.test(data)) {
-      return {reason: 'Data is not valid integer'};
+      throw new CustomError ([],  'Data is not valid integer')
     }
-
-    // if (!Number.isFinite(data)) {
-    //   console.log(data)
-    //   return {reason: 'Data is not valid number'};
-    // }
 
     return null;
   }
@@ -26,7 +22,7 @@ export class Validator {
     const regexp = /\D/;
 
     if (categories.split(',').some(id => regexp.test(id))) {
-      return {reason: `Category ID's should be numbers. Error in ${categories}`};
+      throw new CustomError ([],  `Category ID's should be numbers. Error in ${categories}`)
     }
 
     return null;
@@ -34,11 +30,11 @@ export class Validator {
 
   public static validateOrder(products): ValidationObject {
     if (!products) {
-      return {reason: 'Incorrect data'};
+      throw new CustomError ([], 'Incorrect data')
     }
 
     if (!products.length) {
-      return {reason: 'Products are empty'};
+      throw new CustomError ([],  'Products are empty')
     }
 
     const productsHasError = products.some(product => {
@@ -52,7 +48,8 @@ export class Validator {
     });
 
     if (productsHasError) {
-      return {reason: 'Products contains invalid data'};
+      throw new CustomError ([],  'Products contains invalid data');
+      // return {reason: 'Products contains invalid data'};
     }
 
     // if (!user.hasOwnProperty('name') || !user.hasOwnProperty('phone')) {

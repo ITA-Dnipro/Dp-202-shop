@@ -1,15 +1,11 @@
-import express from 'express';
-import { orderController } from './order.controller';
-import { productBodySchema, productHeaderSchema, validator } from '../../common/dtos/order.schema';
-import { authMiddleware } from '../../common/middleware/auth.middleware';
+// import express from 'express';
+// import { ordersController } from './order.controller';
+// import { productBodyDto, validator } from '../../common/dto/orders.dto';
+// import { checkProductsMiddleware } from '../../common/middleware/check.products.middleware';
 
 
-export const router = express.Router();
+// const ordersRouter = express.Router();
 
-router.post(
-  '/',
-  validator.headers(productHeaderSchema),
-  authMiddleware,
-  validator.body(productBodySchema),
-  orderController.create
-);
+// ordersRouter.post("/", validator.body(productBodyDto), checkProductsMiddleware, ordersController.handleOrder);
+
+// export { ordersRouter };
