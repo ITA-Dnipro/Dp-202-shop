@@ -8,8 +8,8 @@ class ProductController {
 
   public async getAll(req: Request, res: Response) {
     try {
-      const products: Array<IProduct> = await productModel.getList();
-      return BaseView.buildSuccessView(res, products);
+      // const products: Array<IProduct> = await productModel.getList();
+      // return BaseView.buildSuccessView(res, products);
     } catch (e) {
       return BaseView.buildErrorView(res, ApiError.badRequest(e.message));
     }
@@ -24,8 +24,8 @@ class ProductController {
     }
 
     try {
-      const product: Array<IProduct> = await productModel.findOne(id);
-      return BaseView.buildSuccessView(res, product);
+      // const product: Array<IProduct> = await productModel.findOne(id);
+      // return BaseView.buildSuccessView(res, product);
     } catch (e) {
       return BaseView.buildErrorView(res, ApiError.badRequest(e.message));
     }
@@ -39,10 +39,10 @@ class ProductController {
     }
 
     try {
-      const productsResult = await productModel.findByQuery(categories, products, manufactures);
-      return productsResult.length
-        ? BaseView.buildSuccessView(res, productsResult)
-        : BaseView.buildErrorView(res, ApiError.badRequest('Products are not found'));
+      // const productsResult = await productModel.findByQuery(categories, products, manufactures);
+      // return productsResult.length
+      //   ? BaseView.buildSuccessView(res, productsResult)
+      //   : BaseView.buildErrorView(res, ApiError.badRequest('Products are not found'));
     } catch (e) {
       return BaseView.buildErrorView(res, ApiError.badRequest(e.message));
     }
