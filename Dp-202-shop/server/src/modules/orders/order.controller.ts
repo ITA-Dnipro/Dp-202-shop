@@ -1,36 +1,21 @@
-import { Request, Response } from 'express';
-import { ValidationObject, Validator } from '../../common/validators/validator';
-import { BaseView } from '../../common/views/view';
-import { ApiError } from '../../common/errors/api-errors';
-// import { orderModel } from './order.model';
-import { IProductRequestSchema } from '../../common/dtos/order.schema';
-import { ValidatedRequest } from 'express-joi-validation';
+// import { Request, Response, NextFunction } from 'express';
+// import { BaseView } from '../../common/views/view';
+// import { ordersService } from './order.service';
+// import { IProductRequestSchema } from './../../common/dto/orders.dto';
+// import { ValidatedRequest } from 'express-joi-validation';
+// import { asyncHandler } from '../../common/helpers/async.handler';
 
 
-class OrderController {
+// class OrdersController {
 
-  public async create(req: ValidatedRequest<IProductRequestSchema>, res: Response) {
-    const { products } = req.body;
-    let error: ValidationObject = Validator.validateOrder(products);
-    if (error) {
-      return BaseView.buildErrorView(res, ApiError.badRequest(error.reason));
-    }
+//   public handleOrder = asyncHandler(async (req: ValidatedRequest<IProductRequestSchema>, res: Response, next: NextFunction): Promise<void> => {
+//     if (res.locals.isAuthenticated) {
+//       const { products, user } = res.locals;
+//       const order = await ordersService.completeOrder(user, products);
+//       BaseView.buildSuccessView(res, order);
+//     }
+//   });
 
-    const ids = products.map(product => product.id).join(', ');
-    try {
-      // const resultProducts = await orderModel.findProducts(ids);
-      // error = Validator.validateProductsCount(products, resultProducts);
-      if (error) {
-        return BaseView.buildErrorView(res, ApiError.badRequest(error.reason));
-      }
+// }
 
-      // await orderModel.create(products, res.locals.user.id);
-
-      return BaseView.buildSuccessView(res, []);
-    } catch (e) {
-      return BaseView.buildErrorView(res, ApiError.badRequest(e.message));
-    }
-  }
-}
-
-export const orderController = new OrderController();
+// export const ordersController = new OrdersController();
