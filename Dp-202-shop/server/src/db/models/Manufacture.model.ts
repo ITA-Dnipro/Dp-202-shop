@@ -3,7 +3,7 @@ import {Table, Column, Model, HasMany, UpdatedAt, CreatedAt, Unique} from 'seque
 import {Product} from "./Product.model";
 
 
-interface ManufactureAttributes {
+export interface ManufactureAttributes {
   manufacture: string;
   id?: number;
   createdAt?: Date;

@@ -3,7 +3,7 @@ import {Table, Column, Model, HasMany, UpdatedAt, CreatedAt, Unique} from 'seque
 import {Product} from "./Product.model";
 
 
-interface UnitAttributes {
+export interface UnitAttributes {
   unit: string;
   unit_name: string;
   measure: number;

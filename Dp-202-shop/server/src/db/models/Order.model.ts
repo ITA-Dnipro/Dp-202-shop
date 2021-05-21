@@ -4,7 +4,7 @@ import {User} from "./User.model";
 import {OrderItem} from "./OrderItem.model";
 
 
-interface OrderAttributes {
+export interface OrderAttributes {
   total_sum: number;
   status?: string;
   id?: number;

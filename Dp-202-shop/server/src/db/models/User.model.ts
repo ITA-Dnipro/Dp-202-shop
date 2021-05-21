@@ -4,7 +4,7 @@ import {Product} from "./Product.model";
 import {Order} from "./Order.model";
 
 
-interface UserAttributes {
+export interface UserAttributes {
   login: string;
   password: string;
   email: string;

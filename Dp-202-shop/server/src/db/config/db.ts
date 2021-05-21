@@ -6,4 +6,3 @@ const env = process.env.NODE_ENV || 'development';
 const { [env]: mode} = require('./config');
 
 export default new Sequelize(mode.database, mode.username, mode.password, sequelizeOptions);
-

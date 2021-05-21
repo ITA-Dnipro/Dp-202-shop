@@ -21,10 +21,10 @@ export const sequelizeOptions: SequelizeOptions = {
     idle: 10000,
   },
   define: {
-    timestamps: true,
-    underscored: true,
+    timestamps: false,
+    underscored: false,
     freezeTableName: true,
-    paranoid: true,
+    paranoid: false,
     createdAt: 'created_at',
     updatedAt: 'updated_at',
     deletedAt: 'deleted_at',

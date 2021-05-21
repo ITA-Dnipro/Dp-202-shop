@@ -7,7 +7,7 @@ import {Manufacture} from "./Manufacture.model";
 import {OrderItem} from "./OrderItem.model";
 
 
-interface ProductAttributes {
+export interface ProductAttributes {
   vendor_code: number;
   product_name: string;
   amount: string;

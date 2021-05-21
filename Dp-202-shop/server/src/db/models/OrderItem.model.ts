@@ -4,7 +4,7 @@ import {Product} from "./Product.model";
 import {Order} from "./Order.model";
 
 
-interface OrderItemAttributes {
+export interface OrderItemAttributes {
   quantity: number;
   id?: number;
   createdAt?: Date;
