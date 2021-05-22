@@ -18,13 +18,13 @@ export interface IProductRequestSchema extends ValidatedRequestSchema {
   };
 }
 
-export const productHeaderSchema = Joi.object({
+export const userLoginDto = Joi.object({
   login: Joi.string().min(2).max(50).required(),
   phone: Joi.string().pattern(/^\+\d{10,15}/i).required(),
   password: Joi.string().min(4).max(16).required()
 });
 
-export const productBodySchema = Joi.object({
+export const productBodyDto = Joi.object({
   products: Joi.array().has(Joi.object({
     id: Joi.number().integer().positive().required(),
     count: Joi.number().integer().positive().less(100).required()

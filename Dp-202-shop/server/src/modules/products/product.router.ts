@@ -1,9 +1,15 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 import { productsController } from './product.controller';
+import { searchParamsDto, validator } from '../../common/dtos/search.params.dto';
+import {idDto} from '../../common/dtos/id.dto';
 
-export const router = express.Router();
+const productsRouter = express.Router();
 
+productsRouter.get("/search", validator.query(searchParamsDto), productsController.getAll);
+productsRouter.get("/:id", validator.params(idDto), productsController.getOne);
+productsRouter.get("/", productsController.getByQuery);
+productsRouter.get('/all-categories', productsController.getAllCategories);
+productsRouter.get('/all-manufactures', productsController.getAllManufactures);
+productsRouter.get('/all-units', productsController.getAllUnits);
 
-router.get('/', productsController.getAll);
-// router.get('/search', productsController.getByQuery);
-router.get('/:id', productsController.getOne);
+export {productsRouter};
