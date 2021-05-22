@@ -67,7 +67,7 @@ class UserService {
     const rawSalesmenData = await User.findAll({
       attributes:
         ['id', 'login'],
-      where: { role: role }
+      where: { role }
     });
     return normalize(rawSalesmenData);
   }

@@ -8,7 +8,7 @@ const adminRouter = express.Router();
 
 adminRouter.get("/products/add", /*hashCheckMiddlware, */ adminController.showNothing);
 adminRouter.post("/products/add", /*hashCheckMiddlware, */ validator.body(newProductDto), adminController.addNewProduct);
-adminRouter.get("/allsalesmen",  adminController.getAllSalesmen);
+adminRouter.get("/all-salesmen",  adminController.getAllSalesmen);
 adminRouter.put("/products/:id", /*hashCheckMiddlware,*/ validator.params(idDto), adminController.updateProduct);
 adminRouter.get("/products/:id", /*hashCheckMiddlware,*/ validator.params(idDto), adminController.getProductDetails);
 

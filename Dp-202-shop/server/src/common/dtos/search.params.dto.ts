@@ -11,7 +11,7 @@ export interface ISearchParams extends ValidatedRequestSchema {
 }
 
 export const searchParamsDto = Joi.object().keys({
-    categories: Joi.string().pattern(/^[0-9,]+$/).allow(''),
-    manufactures: Joi.string().allow(''),
-    products: Joi.string().allow('')
+    categories: Joi.string().pattern(/^[0-9,]+$/),
+    manufactures: Joi.string(),
+    products: Joi.string()
 }).unknown(true);

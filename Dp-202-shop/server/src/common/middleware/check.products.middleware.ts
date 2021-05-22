@@ -5,7 +5,7 @@ import { ValidatedRequest } from 'express-joi-validation';
 import { IProductRequestSchema } from '../dtos/orders.dto';
 
 
-export const checkProductsMiddleware = async function (req: ValidatedRequest<IProductRequestSchema>, res: Response, next: NextFunction): Promise<void> {
+export const checkProductsMiddleware = async (req: ValidatedRequest<IProductRequestSchema>, res: Response, next: NextFunction): Promise<void> => {
     const { products } = req.body;
     const foundProducts = await productsService.retrieveIdAmount(products);
     const idNotExist = await productsService.checkIdExists(products, foundProducts);

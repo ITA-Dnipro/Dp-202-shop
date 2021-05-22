@@ -18,7 +18,6 @@ class AdminController {
 
     addNewProduct = asyncHandler(async (req: ValidatedRequest<INewProduct>, res: Response, next: NextFunction): Promise<void> => {
         const { product } = req.body;
-        console.log(product);
         const newProduct = await productsService.addNewProduct(product);
         await BaseView.buildSuccessView(res, newProduct);
     });

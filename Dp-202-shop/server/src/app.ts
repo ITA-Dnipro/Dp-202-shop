@@ -4,8 +4,9 @@ import { errorHandlerMiddleware } from './common/middleware/error-handler.middle
 import sequelize from "./db/config/db";
 import { productsRouter } from './modules/products/product.router';
 import { adminRouter } from './modules/admin/admin.router';
-import { NotFound } from './common/errors/notFound';
 import bodyParser = require("body-parser");
+import { notFoundMiddleware } from './common/middleware/not.found.middleware';
+
 
 
 dotenv.config();
@@ -25,12 +26,9 @@ app.use(bodyParser.json());
 
 
 app.use('/products', productsRouter);
-// app.use('/order',  authMiddleware, ordersRouter);
 app.use('/admin', /*authMiddleware, adminMiddleWare */ adminRouter);
 
-app.use(function (req, res, next) {
-  next(new NotFound('This page doesn\'t exist'))
-});
+app.use('*', notFoundMiddleware);
 
 app.use(errorHandlerMiddleware);
 
