@@ -8,6 +8,8 @@ export interface OrderAttributes {
   total_sum: number;
   status?: string;
   id?: number;
+  buyer_id?: number;
+  salesman_id?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }

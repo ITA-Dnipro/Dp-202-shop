@@ -7,15 +7,17 @@ import {Order} from "./Order.model";
 export interface OrderItemAttributes {
   quantity: number;
   id?: number;
+  order_id?: number;
+  product_id?: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
 interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, 'id'> {}
 
-@Table({ tableName: 'order-items' })
+@Table({ tableName: 'order_items' })
 export class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> {
-  public static readonly tableName: string = 'order-items';
+  public static readonly tableName: string = 'order_items';
 
   @ForeignKey(() => Order)
   @Column({
