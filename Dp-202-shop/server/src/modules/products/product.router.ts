@@ -8,8 +8,8 @@ const productsRouter = express.Router();
 productsRouter.get("/search", validator.query(searchParamsDto), productsController.getAll);
 productsRouter.get("/:id", validator.params(idDto), productsController.getOne);
 productsRouter.get("/", productsController.getByQuery);
-productsRouter.get('/allcategories', productsController.getAllCategories);
-productsRouter.get('/allmanufactures', productsController.getAllManufactures);
-productsRouter.get('/allunits', productsController.getAllUnits);
+productsRouter.get('/all-categories', productsController.getAllCategories);
+productsRouter.get('/all-manufactures', productsController.getAllManufactures);
+productsRouter.get('/all-units', productsController.getAllUnits);
 
 export {productsRouter};
