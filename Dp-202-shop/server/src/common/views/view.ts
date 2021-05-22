@@ -1,5 +1,4 @@
 import { Response } from 'express';
-import { ApiError } from '../errors/api-errors';
 
 export class BaseView {
 
