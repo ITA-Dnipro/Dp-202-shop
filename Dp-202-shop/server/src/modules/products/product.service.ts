@@ -1,13 +1,13 @@
-import {Manufacture} from '../../db/models/Manufacture.model';
-import {Category} from '../../db/models/Category.model';
-import {normalize, normalizeOne, delExtra, deleteKeys} from '../../common/helpers/dataNormalization';
-import {Unit} from '../../db/models/Unit.model';
-import {User} from '../../db/models/User.model';
-import {Op} from 'sequelize';
-import {Product, ProductAttributes} from '../../db/models/Product.model';
-import {userService} from '../users/user.service';
-import {NotFoundData} from '../../common/errors/notFoundData';
-import {IProduct} from "../../common/dtos/new.product.dto";
+import { Manufacture } from '../../db/models/Manufacture.model';
+import { Category } from '../../db/models/Category.model';
+import { normalize, normalizeOne, delExtra, deleteKeys } from '../../common/helpers/dataNormalization';
+import { Unit } from '../../db/models/Unit.model';
+import { User } from '../../db/models/User.model';
+import { Op } from 'sequelize';
+import { Product, ProductAttributes } from '../../db/models/Product.model';
+import { userService } from '../users/user.service';
+import { NotFoundData } from '../../common/errors/notFoundData';
+import { IProduct } from "../../common/dtos/new.product.dto";
 
 interface IBasicProduct extends ProductAttributes {
   category_id: number;
