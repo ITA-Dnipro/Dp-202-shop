@@ -1,11 +1,10 @@
-import { IError, BaseError } from '../errors/baseError';
-import { Request, Response } from 'express';
+import { IError } from '../errors/baseError';
+import { Request, Response, NextFunction } from 'express';
 
-export function errorHandlerMiddleware(err: IError, req: Request, res: Response) {
-  const status = err instanceof BaseError? err.statusCode : 500;
-  return res.status(status).json({
+export default (err : IError, req: Request, res:Response, next: NextFunction) : void => {
+  res.status(err.status || 500).json({
       success: false,
-      error: err.message || 'Server error',
+      error: err.error || 'Server error',
       data: err.data
-    });
-}
+  });
+};

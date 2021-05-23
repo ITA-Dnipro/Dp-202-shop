@@ -1,7 +1,8 @@
 export interface IError {
-    name: string;
     message: string;
     data?: any[];
+    status?: number;
+    error: any;
 }
 
 export class BaseError extends Error {

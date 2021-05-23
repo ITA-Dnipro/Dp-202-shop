@@ -11,12 +11,15 @@ export interface IProductRequestSchema extends ValidatedRequestSchema {
     password: string
   };
   [ContainerTypes.Body]: {
-    products: Array<{
-      id: number,
-      count: number
-    }>
+    products: IProductsArray
   };
 }
+
+export type IProductsArray = Array<{
+  id: number,
+  count: number
+}>
+
 
 export const userLoginDto = Joi.object({
   login: Joi.string().min(2).max(50).required(),

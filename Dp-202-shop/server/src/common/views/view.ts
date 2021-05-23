@@ -1,6 +1,5 @@
-import { Response } from 'express';
-import { ApiError } from '../errors/api-errors';
 
+import { Response } from 'express';
 export class BaseView {
 
   public static buildSuccessView(res: Response, data: any): Response {

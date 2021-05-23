@@ -9,6 +9,10 @@ import {OrderItem} from "./OrderItem.model";
 
 export interface ProductAttributes {
   vendor_code: number;
+  // category_id? : number;
+  // manufacture_id?: number;
+  // user_id?: number;
+  // unit_id?: number;
   product_name: string;
   amount: string;
   price: number;
