@@ -31,7 +31,7 @@ class AdminController {
 
     getProductDetails = asyncHandler (async  (req, res, next) => {
         const id = req.params.id;
-        const updatedProduct = await productsService.getOneProductById(id);
+        const updatedProduct = await productsService.getOneProductById(id, true);
         await BaseView.buildSuccessView(res, updatedProduct);
     });
 
