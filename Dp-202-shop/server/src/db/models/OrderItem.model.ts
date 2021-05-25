@@ -15,9 +15,9 @@ export interface OrderItemAttributes {
 
 interface OrderItemCreationAttributes extends Optional<OrderItemAttributes, 'id'> {}
 
-@Table({ tableName: 'order-items' })
+@Table({ tableName: 'order_items' })
 export class OrderItem extends Model<OrderItemAttributes, OrderItemCreationAttributes> {
-  public static readonly tableName: string = 'order-items';
+  public static readonly tableName: string = 'order_items';
 
   @ForeignKey(() => Order)
   @Column({
