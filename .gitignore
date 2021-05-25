@@ -1,16 +1,12 @@
 # dependencies
-./Dp-202-shop/server/node_modules/
-./Dp-202-shop/server/dist/
-./Dp-202-shop/node_modules/
-node_modules
-.env
-
+./node_modules/
+./dist/
 
 #cache
-.eslintcache
+./.eslintcache
 
 # production
-./Dp-202-shop/server/.env
+./.env
 
 .idea/
 *.iml
