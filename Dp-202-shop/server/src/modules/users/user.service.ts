@@ -69,20 +69,11 @@ class UserService {
   async getAllUsersByRole(role: UserRole | UserRole[], attributes: UserKeyAttributes[]): Promise<Array<IUserOptionalAttributes>> {
     const attributesArray: string[] = [];
     attributes.forEach(el => attributesArray.push(el))
-    let rawSalesmenData: any;
-    if (Array.isArray(role)) {
-      rawSalesmenData = await User.findAll({
-        attributes:
-          attributesArray,
-        where: { [Op.and]: role }
-      });
-    } else {
-      rawSalesmenData = await User.findAll({
-        attributes:
-          attributesArray,
-        where: { role }
-      });
-    }
+    const rawSalesmenData = await User.findAll({
+      attributes:
+        attributesArray,
+      where: Array.isArray(role) ? { [Op.or]: role } : { role }
+    });
     return normalize(rawSalesmenData);
   }
 }
