@@ -137,7 +137,6 @@ export class ProductsService {
   }
 
   async getOrCreateRow(field: string, tableName: string): Promise<number> {
-    // console.log('xtecuting, field: row', field, tableName)
     let tableModel: any;
     let columnName: string;
     switch (field) {
@@ -160,8 +159,6 @@ export class ProductsService {
       attributes: ['id', columnName],
       where: {[columnName]: {[Op.iLike]: `%${tableName.toLowerCase()}%`}}
     });
-    // // console.log(field)
-    // console.log('length', data.length);
 
 
     if (data.length === 0) {
@@ -169,7 +166,7 @@ export class ProductsService {
         {[columnName]: tableName}
       );
       return normalizeOne(newData).id
-    };
+    }
     return normalize(data)[0].id;
   };
 
@@ -207,7 +204,6 @@ export class ProductsService {
     const idExist = this.idIsExist(id, true);
     if (!idExist) { throw new NotFoundData([{ id: id }], 'This doesnt exist') };
     const productForDB = await this.replaceDataWithForeignKeys(productData);
-    console.log(productForDB)
     const updatedProduct = await Product.update(
       productForDB,
 
@@ -273,8 +269,7 @@ export class ProductsService {
   }
 
   async getOneProductById(id: number, showDeleted: boolean): Promise<IProductFromBody> {
-    let isExist = await this.idIsExist(id, showDeleted)
-    console.log("isExist", isExist);
+    let isExist = await this.idIsExist(id, showDeleted);
     if (!isExist) {
       throw new NotFoundData([{id: id}], 'Id doesn\'t exist')
     } else {
@@ -354,8 +349,6 @@ export class ProductsService {
         deleted: showDeleted ? {[Op.or]: [true, false]} : showDeleted
       }
     })
-
-    console.log(dbRes)
 
     return dbRes.length !== 0
   }

@@ -4,7 +4,8 @@ import { BaseView } from '../../common/views/view';
 import { ValidatedRequestSchema, ValidatedRequest } from 'express-joi-validation'
 import { productsService } from '../products/product.service';
 import { INewProduct } from '../../common/dtos/new.product.dto';
-import { userService } from '../users/user.service'
+import { userService } from '../users/user.service';
+import {ordersService} from '../orders/order.service';
 import { UserRole } from '../users/user.service';
 import { IId } from '../../common/dtos/id.dto';
 
@@ -43,6 +44,29 @@ class AdminController {
         BaseView.buildSuccessView(res, updatedProduct);
 
     });
+
+  getAllOrders = asyncHandler(async (req: ValidatedRequestSchema, res: Response, next: NextFunction): Promise<void> => {
+    const orders = await ordersService.getAllOrders();
+    BaseView.buildSuccessView(res, orders);
+  })
+
+  getOrderDetailsById = asyncHandler(async (req: ValidatedRequestSchema, res: Response, next: NextFunction): Promise<void> => {
+    const {id} = req.params;
+    const orderDetails = await ordersService.getOrderDetailsById(id);
+    BaseView.buildSuccessView(res, orderDetails);
+  })
+
+  changeOrderStatus = asyncHandler(async (req: ValidatedRequestSchema, res: Response, next: NextFunction): Promise<void> => {
+    const {id} = req.params;
+    const {status} = req.query;
+    const order = await ordersService.changeOrderStatus(id, status);
+    BaseView.buildSuccessView(res, order);
+  })
+
+  getAllClients = asyncHandler(async (req: ValidatedRequestSchema, res: Response, next: NextFunction): Promise<void> => {
+      const users = await userService.getAllUsersByRole(UserRole.Client, ['id', 'login', 'name', 'phone', 'email', 'balance', 'createdAt']);
+      BaseView.buildSuccessView(res, users);
+    })
 
     deleteProduct = asyncHandler(async (req: ValidatedRequest<IId>, res: Response, next: NextFunction): Promise<void> => {
         const id: number = req.params.id;
