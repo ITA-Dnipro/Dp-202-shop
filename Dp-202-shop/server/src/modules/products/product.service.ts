@@ -1,75 +1,80 @@
 import { Manufacture } from '../../db/models/Manufacture.model';
 import { Category } from '../../db/models/Category.model';
-import { normalize, normalizeOne } from '../../common/helpers/dataNormalization';
+import { normalize, normalizeOne, delExtra, deleteKeys } from '../../common/helpers/dataNormalization';
 import { Unit } from '../../db/models/Unit.model';
 import { User } from '../../db/models/User.model';
 import { Op } from 'sequelize';
-import { ProductAttributes } from '../../db/models/Product.model';
+import { Product, ProductAttributes } from '../../db/models/Product.model';
 import { userService } from '../users/user.service';
-import { Product } from '../../db/models/Product.model';
 import { NotFoundData } from '../../common/errors/notFoundData';
+
+import { NotFound } from '../../common/errors/notFound';
+import { IProduct as IProductFromBody } from '../../common/dtos/new.product.dto'
+import { IProductsArray } from '../../common/dtos/orders.dto';
 
 interface IBasicProduct extends ProductAttributes {
   category_id: number;
   manufacture_id: number;
   unit_id: number;
-  user_id: number
+  user_id: number | void;
 }
 
-export interface IProduct {
+
+type allowedTables = 'categories' | 'manufactures' | 'units'
+
+export interface IProduct extends IProductFromBody {
   id: number;
-  product_name: string;
-  manufacture: string;
-  category: string;
-  unit: string;
-  price: number;
-  img: string;
-  ingredients?: string
-  user: string;
 }
+
+export type IFoundProductsArray = Array<{
+  id: number,
+  amount: number
+}>
+
 
 export interface IDbData {
   id: number;
   category?: string;
   manufacture?: string;
   units?: string;
-  login?: string;
 }
+
 
 export class ProductsService {
 
-  async retrieveIdAmount(products) {
-    const ids = products.map(el => el.id);
+  async retrieveIdAmount(products: IProductsArray): Promise<IFoundProductsArray> {
+    const ids: number[] = products.map(el => el.id);
     const rawProducts = await Product.findAll({
-        attributes: ['id', 'amount'],
-        where: {
-            id: {
-                [Op.in]: ids
-            }
+      attributes: ['id', 'amount'],
+      where: {
+        id: {
+          [Op.in]: ids
         }
+      }
     });
     return normalize(rawProducts);
   };
 
-  async checkIdExists(products, rows) {
-    const foundIds = rows.map(product => product.id);
+  async checkIdExists(products: IProductsArray, foundProducts: IFoundProductsArray): Promise<Array<{ id: number }>> {
+    const foundIds: number[] = foundProducts.map(product => product.id);
     const idNotExist = products.filter(product => {
-        return !foundIds.includes(product.id)
+      return !foundIds.includes(product.id)
     }).map(el => {
-        return { 'id': el.id }
+      return { 'id': el.id }
     });
     return idNotExist
   }
 
-  async checkAvailability(products, rows) {
-    return rows.filter(el => {
-        const item = products.find(val => { return val.id === el.id; });
-        if (item.count > el.amount) { return el }
+  async checkAvailability(products: IProductsArray, foundProducts: IFoundProductsArray): Promise<any> {
+    return foundProducts.filter(el => {
+      const item = products.find(val => { return val.id === el.id; });
+      if (item.count > el.amount) { return el }
     });
   }
 
 
-  async getTableData(tableName: string): Promise<Array<IDbData>> {
+  async getTableData(tableName: allowedTables): Promise<void | Array<IDbData>> {
+
     let tableColumn: string | string[];
     let tableModel: any;
     switch (tableName) {
@@ -89,8 +94,9 @@ export class ProductsService {
     const rawTableData = await tableModel.findAll({
       attributes: ['id', tableColumn]
     });
+    if (rawTableData.length === 0) throw new NotFound(`${tableName} are not found`)
     const tableData = normalize(rawTableData);
-    return rawTableData;
+    return tableData;
   }
 
   async getDataId(rowName: string, tableName: string): Promise<IDbData> {
@@ -118,22 +124,22 @@ export class ProductsService {
     }
     const data = await tableModel.findAll({
       attributes: ['id', columnName],
-      where: { [columnName]: { [Op.iLike]: `%${rowName}%` } }
+      where: {[columnName]: {[Op.iLike]: `%${rowName}%`}}
     });
 
     if (data.length === 0) {
       const newData = await tableModel.create(
-        { [columnName]: rowName }
+        {[columnName]: rowName}
       );
       return newData.dataValues.id
     }
     return data.dataValues.id;
   }
 
-  async findOrCreateRow(rowName, tableName) {
+  async getOrCreateRow(field: string, tableName: string): Promise<number> {
     let tableModel: any;
-    let columnName: any;
-    switch (rowName) {
+    let columnName: string;
+    switch (field) {
       case 'category_id':
         tableModel = Category;
         columnName = 'category';
@@ -149,64 +155,203 @@ export class ProductsService {
       default:
         break;
     }
-    const data = await tableModel.findAll({
+    const data: any[] = await tableModel.findAll({
       attributes: ['id', columnName],
-      where: { [columnName]: { [Op.iLike]: `%${tableName.toLowerCase()}%` } }
+      where: {[columnName]: {[Op.iLike]: `%${tableName.toLowerCase()}%`}}
     });
-    console.log(data);
+
 
     if (data.length === 0) {
       const newData = await tableModel.create(
-        { [columnName]: tableName }
+        {[columnName]: tableName}
       );
       return normalizeOne(newData).id
-    };
-    return normalizeOne(data).id;
+    }
+    return normalize(data)[0].id;
   };
 
 
-  async replaceStringsWithIds(product): Promise<IBasicProduct> {
-    let productObj : any = {};
-    const dataWithoutId = ['product_name', 'amount', 'deleted', 'price', 'ingridients', 'img', 'vendor_code'];
-    for (const [key, value] of Object.entries(product)) {
-      if (dataWithoutId.includes(key)) {
-        productObj[`${key}`] = value;
-      }
-    }
-    const valuesToFind = [
+  async replaceDataWithForeignKeys(product: IProductFromBody): Promise<any> {
+    let productObj: Partial<IBasicProduct> = {};
+    const notForeignKeys = ['product_name', 'amount', 'deleted', 'price', 'ingredients', 'img', 'vendor_code'];
+    notForeignKeys.forEach(key => productObj[`${key}`] = product[`${key}`] ? product[`${key}`]: null)
+    const valuesToFind: Array<{ [key: string]: string }> = [
       { value: product.category, field: 'category_id' },
       { value: product.manufacture, field: 'manufacture_id' },
       { value: product.unit, field: 'unit_id' }
+
     ];
     for (let i = 0; i < valuesToFind.length; i++) {
-      productObj[`${valuesToFind[i].field}`] = await this.findOrCreateRow(valuesToFind[i].field, valuesToFind[i].value);
+      productObj[`${valuesToFind[i].field}`] = await this.getOrCreateRow(valuesToFind[i].field, valuesToFind[i].value);
     }
-    productObj.user_id = await userService.findOrCreateSalesman(product.user_id);
-  return productObj
+    productObj.user_id = await userService.getSalesmanIdByLogin(product.salesman_login);
+
+    return productObj
   }
 
-  async addNewProduct(product) {
-    const productForDB = await this.replaceStringsWithIds(product);
-    console.log(productForDB);
+  async addNewProduct(product: IProductFromBody): Promise<Array<ProductAttributes>> {
+    const productForDB = await this.replaceDataWithForeignKeys(product);
     const rawNewProduct = await Product.create(productForDB);
-    return normalizeOne(rawNewProduct);
+    return [normalizeOne(rawNewProduct)];
   }
 
-  async updateProduct(id, productData) {
-    const productForDB = await this.replaceStringsWithIds(productData);
-    const updatedProduct = Product.update(
-      productForDB,
-      { where: { id: id } }
-    );
-    return normalizeOne(updatedProduct);
+  async checkIdExist(id: number): Promise<Boolean> {
+    const foundProduct = await Product.findAll({ where: { id } })
+    return Boolean(foundProduct.length)
   }
-  async getOneProductById(id: number) {
-    let result;
-    if (result.length === 0) {
-      throw new NotFoundData([{ id: id }], 'Id doesn\'t exist')
+
+  async updateProduct(id: number, productData: IProductFromBody): Promise<Array<ProductAttributes> | void> {
+    const idExist = this.idIsExist(id, true);
+    if (!idExist) { throw new NotFoundData([{ id: id }], 'This doesnt exist') };
+    const productForDB = await this.replaceDataWithForeignKeys(productData);
+    const updatedProduct = await Product.update(
+      productForDB,
+
+      {
+        returning: true,
+        where: { id: id }
+      }
+    );
+    return [normalizeOne(updatedProduct[1][0])];
+  }
+
+
+
+  async deleteProduct(id: number) {
+    const idExist = this.idIsExist(id, true)
+    if (!idExist) throw new NotFoundData([{ id: id }], 'This doesnt exist');
+    const idIsNotDeleted = this.idIsExist(id, false)
+    if (idIsNotDeleted) throw new NotFoundData([{ id: id }], 'This id is already deleted');
+    const deletedProduct = await Product.update(
+      { deleted: true },
+      {
+        where: { id: id },
+        returning: true
+      }
+    );
+    return [normalizeOne(deletedProduct[1][0])];
+  }
+
+  async getAllProducts(): Promise<Array<IProductFromBody>> {
+    const dbRes = await Product.findAll({
+      where: {
+        deleted: "false"
+      },
+      attributes: [
+        "id",
+        "vendor_code",
+        "product_name",
+        "amount",
+        "price",
+        "img"
+      ],
+      include: [
+        {
+          model: Category,
+          attributes: ["category"]
+        },
+        {
+          model: Manufacture,
+          attributes: ["manufacture"]
+        },
+        {
+          model: Unit,
+          attributes: ["unit"]
+        },
+        {
+          model: User,
+          attributes: ["login"]
+        }
+      ]
+    });
+    const rawProducts = normalize(dbRes, [{category: ["category"]}, {unit: ["unit"]}, {manufacture: ["manufacture"]}, {user: ["login"]}]);
+    return delExtra(rawProducts, ["user"])
+  }
+
+  async getOneProductById(id: number, showDeleted: boolean): Promise<IProductFromBody> {
+    let isExist = await this.idIsExist(id, showDeleted);
+    if (!isExist) {
+      throw new NotFoundData([{id: id}], 'Id doesn\'t exist')
+    } else {
+      const dbRes = await Product.findOne({
+        where: {
+          id: id,
+          deleted: showDeleted ? {[Op.or]: [true, false]} : showDeleted
+        },
+        attributes: [
+          "id",
+          "vendor_code",
+          "product_name",
+          "amount",
+          "price",
+          "img",
+          "ingredients",
+        ],
+        include: [
+          {
+            model: Category,
+            attributes: ["category"]
+          },
+          {
+            model: Manufacture,
+            attributes: ["manufacture"]
+          },
+          {
+            model: Unit,
+            attributes: ["unit"]
+          },
+          {
+            model: User,
+            attributes: ["login"]
+          }
+        ]
+      })
+
+      const rawProduct = normalizeOne(dbRes, [{category: ["category"]}, {unit: ["unit"]}, {user: ["login"]}, {manufacture: ["manufacture"]}]);
+      return deleteKeys(rawProduct, ["user"]);
     }
+  }
+
+  async getAllProductsExtended(): Promise<Array<IProductFromBody>> {
+    const dbRes = await Product.findAll({
+      attributes: {
+        exclude: ["unit_id", "manufacture_id", "category_id", "user_id"]
+      },
+      include: [
+        {
+          model: Category,
+          attributes: ["category"]
+        },
+        {
+          model: Manufacture,
+          attributes: ["manufacture"]
+        },
+        {
+          model: Unit,
+          attributes: ["unit"]
+        },
+        {
+          model: User,
+          attributes: ["login"]
+        }
+      ]
+    });
+
+    const rawProducts = normalize(dbRes, [{category: ["category"]}, {unit: ["unit"]}, {user: ["name"]}, {manufacture: ["manufacture"]}, {user: ["login"]}])
+    return delExtra(rawProducts, ["user"]);
+  }
+
+  async idIsExist(id: number, showDeleted: boolean): Promise<boolean> {
+
+    const dbRes = await Product.findAll({
+      where: {
+        id: id,
+        deleted: showDeleted ? {[Op.or]: [true, false]} : showDeleted
+      }
+    })
+
+    return dbRes.length !== 0
   }
 }
-
 
 export const productsService = new ProductsService();

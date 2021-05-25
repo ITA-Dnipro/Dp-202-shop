@@ -10,7 +10,7 @@ export interface INewProduct extends ValidatedRequestSchema {
     };
 }
 
-interface IProduct {
+export interface IProduct {
     vendor_code: number;
     product_name: string;
     manufacture: string;
@@ -23,12 +23,12 @@ interface IProduct {
     img?: string;
     createdAt?: Date;
     updatedAt?: Date;
-    user_id: number;
+    salesman_login: string;
 }
 
 
 export const newProductDto = Joi.object({
-    product: Joi.object({ 
+    product: Joi.object({
     vendor_code: Joi.string().required(),
     product_name: Joi.string().required(),
     manufacture: Joi.string().required(),
@@ -41,7 +41,7 @@ export const newProductDto = Joi.object({
     img: Joi.string(),
     createdAt: Joi.date(),
     updatedAt: Joi.date(),
-    user_id: Joi.number().required()
+    salesman_login: Joi.string().required()
     })
 });
 
