@@ -5,7 +5,7 @@ import { ValidatedRequest } from 'express-joi-validation';
 import { ISearchParams } from '../../common/dtos/search.params.dto';
 import { IId } from '../../common/dtos/id.dto';
 import { productsService, IDbData } from './product.service';
-
+import { IProduct } from '../../common/dtos/new.product.dto';
 
 class ProductController {
 
