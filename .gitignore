@@ -3,6 +3,7 @@
 ./Dp-202-shop/server/dist/
 ./Dp-202-shop/node_modules/
 
+
 #cache
 .eslintcache
 
