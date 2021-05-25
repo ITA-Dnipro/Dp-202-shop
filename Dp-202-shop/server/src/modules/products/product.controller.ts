@@ -1,11 +1,10 @@
-import {Request, Response, NextFunction} from 'express';
-import {asyncHandler} from '../../common/helpers/async.handler';
-import {BaseView} from '../../common/views/view';
-import {ValidatedRequest} from 'express-joi-validation';
-import {ISearchParams} from '../../common/dtos/search.params.dto';
-import {IId} from '../../common/dtos/id.dto';
-import {IProduct} from "../../common/dtos/new.product.dto";
-import {productsService} from "./product.service"
+import { Request, Response, NextFunction } from 'express';
+import { asyncHandler } from '../../common/helpers/async.handler';
+import { BaseView } from '../../common/views/view';
+import { ValidatedRequest } from 'express-joi-validation';
+import { ISearchParams } from '../../common/dtos/search.params.dto';
+import { IId } from '../../common/dtos/id.dto';
+import { productsService, IDbData } from './product.service';
 
 
 class ProductController {
@@ -21,23 +20,25 @@ class ProductController {
     BaseView.buildSuccessView(res, product);
   });
 
-  public getByQuery = asyncHandler(async (req: ValidatedRequest<ISearchParams>, res: Response, next: NextFunction): Promise<void> => {
-    // const products: Array<IProduct> = await productModel.getList();
-    // return BaseView.buildSuccessView(res, products);
-  });
+    public getByQuery = asyncHandler(async (req: ValidatedRequest<ISearchParams>, res: Response, next: NextFunction): Promise<void> => {
+        // const products: Array<IProduct> = await productModel.getList();
+        // return BaseView.buildSuccessView(res, products);
+    });
 
-  public getAllCategories = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    public getAllCategories = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const categories: Array<IDbData> | void = await productsService.getTableData('categories');
+        BaseView.buildSuccessView(res, categories);
+    });
 
-  });
+    public getAllManufactures = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const manufactures: Array<IDbData> | void = await productsService.getTableData('manufactures');
+        BaseView.buildSuccessView(res, manufactures);
+    });
 
-  public getAllManufactures = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-
-  });
-
-  public getAllUnits = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-
-  });
-
+    public getAllUnits = asyncHandler(async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const units: Array<IDbData> | void = await productsService.getTableData('units');
+        BaseView.buildSuccessView(res, units);
+    });
 
 }
 

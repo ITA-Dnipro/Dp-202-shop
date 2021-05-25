@@ -23,7 +23,7 @@ export interface IProduct {
     img?: string;
     createdAt?: Date;
     updatedAt?: Date;
-    user_id: number;
+    salesman_login: string;
 }
 
 
@@ -41,7 +41,7 @@ export const newProductDto = Joi.object({
     img: Joi.string(),
     createdAt: Joi.date(),
     updatedAt: Joi.date(),
-    user_id: Joi.number().required()
+    salesman_login: Joi.string().required()
     })
 });
 

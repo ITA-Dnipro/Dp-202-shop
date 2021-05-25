@@ -3,6 +3,20 @@ import { normalize, normalizeOne } from '../../common/helpers/dataNormalization'
 import { IDbData } from '../products/product.service';
 import { Op } from 'sequelize';
 import { Forbidden } from '../../common/errors/forbidden';
+import { UserAttributes } from '../../db/models/User.model';
+import { NotFound } from '../../common/errors/notFound';
+
+export enum UserRole {
+  Admin = 'admin',
+  Salesman = 'salesman',
+  Client = 'client'
+}
+
+type UserKeyAttributes = keyof UserAttributes;
+
+interface IUserOptionalAttributes {
+  [key: string]: string | number
+}
 
 class UserService {
 
@@ -41,37 +55,36 @@ class UserService {
     });
     return normalizeOne(newUser).id
   }
-  async findOrCreateSalesman(login) {
+  async getSalesmanIdByLogin(login: string): Promise<number | void> {
     const rawSalesman = await User.findAll({
       attributes:
         ['id', 'login'],
-      where: { [Op.and]: [{ role: 1 }, { login: { [Op.iLike]: `%${login.toLowerCase()}%` } }] }
+      where: { [Op.and]: [{ role: { [Op.or]: [UserRole.Admin, UserRole.Salesman] } }, { login: { [Op.iLike]: `%${login.toLowerCase()}%` } }] }
     });
-    if (rawSalesman.length === 0) {
-      const newRawSalesman = User.create({
-        login: login,
-        role: 'salesman',
-        password: 'default',
-        phone: 'default',
-        email: 'default',
-        balance: 0
-      });
-      const newSalesMan = normalizeOne(newRawSalesman);
-      return newSalesMan.id
-    }
+    if (rawSalesman.length === 0) { throw new NotFound(`Salesman with login ${login} doesnt exist`) };
     const salesMan = normalize(rawSalesman);
-    return salesMan.id;
-
+    return salesMan[0].id;
   }
-  async getAllUsersByRole(role: string): Promise<Array<IDbData>> {
-    const rawSalesmenData = await User.findAll({
-      attributes:
-        ['id', 'login'],
-      where: { role }
-    });
+
+  async getAllUsersByRole(role: UserRole | UserRole[], attributes: UserKeyAttributes[]): Promise<Array<IUserOptionalAttributes>> {
+    const attributesArray: string[] = [];
+    attributes.forEach(el => attributesArray.push(el))
+    let rawSalesmenData: any;
+    if (Array.isArray(role)) {
+      rawSalesmenData = await User.findAll({
+        attributes:
+          attributesArray,
+        where: { [Op.and]: role }
+      });
+    } else {
+      rawSalesmenData = await User.findAll({
+        attributes:
+          attributesArray,
+        where: { role }
+      });
+    }
     return normalize(rawSalesmenData);
   }
-
 }
 
 export const userService = new UserService();

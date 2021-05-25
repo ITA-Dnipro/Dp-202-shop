@@ -1,5 +1,5 @@
-import { Response } from 'express';
 
+import { Response } from 'express';
 export class BaseView {
 
   public static buildSuccessView(res: Response, data: any): Response {

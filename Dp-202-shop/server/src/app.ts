@@ -8,7 +8,6 @@ import bodyParser = require("body-parser");
 import { notFoundMiddleware } from './common/middleware/not.found.middleware';
 
 
-
 dotenv.config();
 const PORT = process.env.PORT || 3000;
 
@@ -21,15 +20,13 @@ const app: Application = express();
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-
 app.use(bodyParser.json());
 
 
 app.use('/products', productsRouter);
 app.use('/admin', /*authMiddleware, adminMiddleWare */ adminRouter);
 
-app.use('*', notFoundMiddleware);
-
+app.use('*', notFoundMiddleware)
 app.use(errorHandlerMiddleware);
 
 app.listen(PORT, () => { console.log(`Server run on port: ${PORT}`) });
