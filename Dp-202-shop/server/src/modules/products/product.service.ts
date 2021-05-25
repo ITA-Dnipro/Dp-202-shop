@@ -97,7 +97,9 @@ export class ProductsService {
     return tableData;
   }
 
+
   async getOrCreateRow(field: string, tableName: string, t?: any): Promise<number> {
+
     let tableModel: any;
     let columnName: string;
     switch (field) {
@@ -127,7 +129,7 @@ export class ProductsService {
         { transaction: t }
       );
       return normalizeOne(newData).id
-    };
+    }
     return normalize(data)[0].id;
   };
 
@@ -240,8 +242,7 @@ export class ProductsService {
   }
 
   async getOneProductById(id: number, showDeleted: boolean): Promise<IProductFromBody> {
-    let isExist = await this.idIsExist(id, showDeleted)
-    console.log("isExist", isExist);
+    let isExist = await this.idIsExist(id, showDeleted);
     if (!isExist) {
       throw new NotFoundData([{ id: id }], 'Id doesn\'t exist')
     } else {
