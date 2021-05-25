@@ -6,18 +6,19 @@ import { ISearchParams } from '../../common/dtos/search.params.dto';
 import { IId } from '../../common/dtos/id.dto';
 import { productsService, IDbData } from './product.service';
 
+
 class ProductController {
 
-    public getAll = asyncHandler(async (req: Response, res: Response, next: NextFunction): Promise<void> => {
-        // const products: Array<IProduct> = await productModel.getList();
-        // return BaseView.buildSuccessView(res, products);
-    });
+  public getAll = asyncHandler(async (req: Response, res: Response, next: NextFunction): Promise<void> => {
+    const products: Array<IProduct> = await productsService.getAllProducts();
+    BaseView.buildSuccessView(res, products);
+  });
 
-    public getOne = asyncHandler(async (req: ValidatedRequest<IId>, res: Response, next: NextFunction): Promise<void> => {
-        // const { id } = req.params;
-        // const product: Array<IProduct> = await productModel.findOne(id);
-        // return BaseView.buildSuccessView(res, product);
-    });
+  public getOne = asyncHandler(async (req: ValidatedRequest<IId>, res: Response, next: NextFunction): Promise<void> => {
+    const { id } = req.params;
+    const product: IProduct = await productsService.getOneProductById(id, false);
+    BaseView.buildSuccessView(res, product);
+  });
 
     public getByQuery = asyncHandler(async (req: ValidatedRequest<ISearchParams>, res: Response, next: NextFunction): Promise<void> => {
         // const products: Array<IProduct> = await productModel.getList();

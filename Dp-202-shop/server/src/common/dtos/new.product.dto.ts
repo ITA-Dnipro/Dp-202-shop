@@ -28,7 +28,7 @@ export interface IProduct {
 
 
 export const newProductDto = Joi.object({
-    product: Joi.object({ 
+    product: Joi.object({
     vendor_code: Joi.string().required(),
     product_name: Joi.string().required(),
     manufacture: Joi.string().required(),

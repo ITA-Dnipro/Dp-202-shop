@@ -41,6 +41,7 @@ class AdminController {
         const id: number = req.params.id;
         const updatedProduct = await productsService.getOneProductById(id, true);
         BaseView.buildSuccessView(res, updatedProduct);
+
     });
 
     deleteProduct = asyncHandler(async (req: ValidatedRequest<IId>, res: Response, next: NextFunction): Promise<void> => {
