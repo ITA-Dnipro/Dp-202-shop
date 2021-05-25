@@ -274,13 +274,14 @@ export class ProductsService {
 
   async getOneProductById(id: number, showDeleted: boolean): Promise<IProductFromBody> {
     let isExist = await this.idIsExist(id, showDeleted)
+    console.log("isExist", isExist);
     if (!isExist) {
       throw new NotFoundData([{id: id}], 'Id doesn\'t exist')
     } else {
       const dbRes = await Product.findOne({
         where: {
-          id,
-          deleted: showDeleted ? showDeleted : {[Op.and]: [true, false]}
+          id: id,
+          deleted: showDeleted ? {[Op.or]: [true, false]} : showDeleted
         },
         attributes: [
           "id",
@@ -350,9 +351,11 @@ export class ProductsService {
     const dbRes = await Product.findAll({
       where: {
         id: id,
-        deleted: showDeleted ? showDeleted : {[Op.and]: [true, false]}
+        deleted: showDeleted ? {[Op.or]: [true, false]} : showDeleted
       }
     })
+
+    console.log(dbRes)
 
     return dbRes.length !== 0
   }
