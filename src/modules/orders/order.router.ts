@@ -8,8 +8,9 @@ const ordersRouter = express.Router();
 
 ordersRouter.post(
 	'/',
+	authenticate,
 	validator.body(productBodyDto),
-	checkProductsMiddleware, // ????
+	checkProductsMiddleware,
 	ordersController.handleOrder,
 );
 
