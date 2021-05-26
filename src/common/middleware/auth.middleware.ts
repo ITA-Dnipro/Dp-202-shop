@@ -1,7 +1,7 @@
 import passport from 'passport';
 import { Strategy, ExtractJwt } from 'passport-jwt';
-import { Unauthorized } from '../../common/errors/unauthorized';
-import { authModel } from './auth.service';
+import { Unauthorized } from '../errors/unauthorized';
+import { authModel } from '../../modules/auth/auth.service';
 
 const customFields = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -13,24 +13,23 @@ const strategy = new Strategy(customFields,
     async function (req,jwtPayload, done) {
 
         try {
-
             const user = await authModel.findUserById(jwtPayload.id);
             if (!user) {
                 done (null,false)
-            } 
-            else if (user.role !== 'admin') {
-                done(null,false);
-            }
-            else {
+            } else {
                 req.params.user = user;
                 done(null,user);
             }
         } catch(err) {
-            return done(new Unauthorized('Uncorrect token'));
+            return done(new Unauthorized('Unauthorized'));
         }
     }
 );
 
 passport.use(strategy);
 
-export const adminAuth = passport.authenticate('jwt', {session:false});
+export const authenticate = passport.authenticate('jwt', {session:false});
+
+
+// Example of usage authMiddleware or adminMiddleware
+// authRouter.get('/user', adminAuth,  (req,res) => {const {user} = req.params;res.send(user)});
