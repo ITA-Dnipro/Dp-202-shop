@@ -14,7 +14,7 @@ class OrdersController {
 		): Promise<void> => {
 			// const { products, user } = res.locals;
 			const { products } = res.locals;
-			const userId = req.user.id;
+			const userId = req.params.user.id;
 			// console.log('user', user)
 			console.log('user', userId);
 			///

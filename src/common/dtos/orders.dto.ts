@@ -16,12 +16,19 @@ export interface IProductRequestSchema extends ValidatedRequestSchema {
 	[ContainerTypes.Body]: {
 		products: IProductsArray;
 	};
+	[ContainerTypes.Params]: {
+		user: IUser;
+	};
 }
 
 export type IProductsArray = Array<{
 	id: number;
 	count: number;
 }>;
+
+export type IUser = {
+	id: number;
+};
 
 export const userLoginDto = Joi.object({
 	login: Joi.string().min(2).max(50).required(),
