@@ -79,10 +79,8 @@ export class OrdersService {
 		return [{ id: orderId, status }];
 	}
 
-	async completeOrder(user, products) {
-		// or userId?
-		// if (user.isAuthenticated === 'false') return new Unauthorized('User is unauthorized'); //??
-		const order = await this.insertItems(products, user.id);
+	async completeOrder(userId: number, products) {
+		const order = await this.insertItems(products, userId);
 		const total_price = order[0].products.reduce(
 			(ac, el) => ac + el.price * el.quantity,
 			0,

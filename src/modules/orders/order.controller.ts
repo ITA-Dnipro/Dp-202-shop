@@ -14,12 +14,15 @@ class OrdersController {
 		): Promise<void> => {
 			// const { products, user } = res.locals;
 			const { products } = res.locals;
+			const userId = req.user.id;
+			// console.log('user', user)
+			console.log('user', userId);
 			///
-			const user = {
-				id: 6,
-			};
+			// const user = {
+			// 	id: 6,
+			// };
 			///
-			const order = await ordersService.completeOrder(user, products);
+			const order = await ordersService.completeOrder(userId, products);
 			BaseView.buildSuccessView(res, order);
 		},
 	);
