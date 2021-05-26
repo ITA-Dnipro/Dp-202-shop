@@ -3,54 +3,89 @@ import { adminController } from './admin.controller';
 import { newProductDto, validator } from '../../common/dtos/new.product.dto';
 import { idDto } from '../../common/dtos/id.dto';
 import { orderStatusDto } from '../../common/dtos/status.dto';
+import { authenticate } from '../../common/middleware/auth.middleware';
+import { adminMiddleware } from '../../common/middleware/admin.middleware';
 
 const adminRouter = express.Router();
 
 adminRouter.get(
 	'/products/add',
-	/* hashCheckMiddlware, */ adminController.showNothing,
+	authenticate,
+	adminMiddleware,
+	adminController.showNothing,
 );
 adminRouter.post(
 	'/products/add',
-	/* hashCheckMiddlware, */ validator.body(newProductDto),
+	authenticate,
+	adminMiddleware,
+	validator.body(newProductDto),
 	adminController.addNewProduct,
 );
 adminRouter.put(
 	'/products/:id',
-	/* hashCheckMiddlware, */ validator.params(idDto),
+	authenticate,
+	adminMiddleware,
+	validator.params(idDto),
 	adminController.updateProduct,
 );
 adminRouter.get(
 	'/products/:id',
-	/* hashCheckMiddlware, */ validator.params(idDto),
+	authenticate,
+	adminMiddleware,
+	validator.params(idDto),
 	adminController.getProductDetails,
 );
 adminRouter.get(
 	'/orders',
-	/* hashCheckMiddlware, */ adminController.getAllOrders,
+	authenticate,
+	adminMiddleware,
+	adminController.getAllOrders,
 );
 adminRouter.get(
 	'/orders/:id',
+	authenticate,
+	adminMiddleware,
 	validator.params(idDto),
 	adminController.getOrderDetailsById,
 );
 adminRouter.patch(
 	'/orders/:id',
+	authenticate,
+	adminMiddleware,
 	validator.params(idDto),
 	validator.query(orderStatusDto),
 	adminController.changeOrderStatus,
 );
 adminRouter.get(
 	'/clients',
-	/* hashCheckMiddlware, */ adminController.getAllClients,
+	authenticate,
+	adminMiddleware,
+	adminController.getAllClients,
 );
-adminRouter.get('/all-salesmen', adminController.getAllSalesmenLogins);
-adminRouter.get('/products', adminController.getAllProducts);
+adminRouter.get(
+	'/all-salesmen',
+	authenticate,
+	adminMiddleware,
+	adminController.getAllSalesmenLogins,
+);
+adminRouter.get(
+	'/products',
+	authenticate,
+	adminMiddleware,
+	adminController.getAllProducts,
+);
 adminRouter.delete(
 	'/products/:id',
+	authenticate,
+	adminMiddleware,
 	validator.params(idDto),
 	adminController.deleteProduct,
 );
-adminRouter.get('/user/:id', /* hashCheckMiddlware, */ adminController.getUser);
+adminRouter.get(
+	'/user/:id',
+	authenticate,
+	adminMiddleware,
+	adminController.getUser,
+);
 
 export { adminRouter };

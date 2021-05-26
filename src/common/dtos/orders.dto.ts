@@ -8,17 +8,17 @@ import {
 export const validator = createValidator();
 
 export interface IProductRequestSchema extends ValidatedRequestSchema {
-	[ContainerTypes.Headers]: {
-		login: string;
-		phone: string;
-		password: string;
-	};
+	// [ContainerTypes.Headers]: {
+	// 	login: string;
+	// 	phone: string;
+	// 	password: string;
+	// };
 	[ContainerTypes.Body]: {
 		products: IProductsArray;
 	};
-	[ContainerTypes.Params]: {
-		user: IUser;
-	};
+	// [ContainerTypes.Params]: {
+	// 	user: IUser;
+	// };
 }
 
 export type IProductsArray = Array<{

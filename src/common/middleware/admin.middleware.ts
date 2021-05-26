@@ -8,5 +8,4 @@ export const adminMiddleware = (req, res, next) => {
 		res.locals.user = user;
 		next();
 	}
-	next();
 };

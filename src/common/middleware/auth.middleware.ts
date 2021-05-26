@@ -19,7 +19,7 @@ const strategy = new Strategy(customFields, async function (
 		if (!user) {
 			done(null, false);
 		} else {
-			req.params.user = user;
+			req.user = user;
 			done(null, user);
 		}
 	} catch (err) {

@@ -12,16 +12,10 @@ class OrdersController {
 			res: Response,
 			next: NextFunction,
 		): Promise<void> => {
-			// const { products, user } = res.locals;
 			const { products } = res.locals;
-			const userId = req.params.user.id;
-			// console.log('user', user)
-			console.log('user', userId);
-			///
-			// const user = {
-			// 	id: 6,
-			// };
-			///
+			/// //!!!!
+			// const userId = req.params.user.id;
+			const userId = 6;
 			const order = await ordersService.completeOrder(userId, products);
 			BaseView.buildSuccessView(res, order);
 		},
