@@ -1,26 +1,31 @@
-import { ValidatedRequest } from 'express-joi-validation';
-import { NextFunction, Response } from 'express';
-import { IProductRequestSchema } from '../dtos/orders.dto';
-import { userService } from '../../modules/users/user.service';
-import { NotFound } from '../errors/notFound';
-import { Forbidden } from '../errors/forbidden';
+import passport from 'passport';
+import { Strategy, ExtractJwt } from 'passport-jwt';
+import { Unauthorized } from '../errors/unauthorized';
+import { authModel } from '../../modules/auth/auth.service';
 
-export async function authMiddleware(
-	req: ValidatedRequest<IProductRequestSchema>,
-	res: Response,
-	next: NextFunction,
-): Promise<void> {
-	const { phone, password } = req.headers;
-	const foundUser = await userService.findUserByPhone(phone);
-	if (foundUser.length === 0) {
-		res.locals.isAuthenticated = false;
-		next(new NotFound('Such phone number is not registered'));
-	} else if (foundUser[0].password !== password) {
-		res.locals.isAuthenticated = false;
-		next(new Forbidden('Incorrect password'));
-	} else {
-		res.locals.user = foundUser[0];
-		res.locals.isAuthenticated = true;
-		next();
-	}
+const customFields = {
+    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    secretOrKey: 'secret',
+    passReqToCallback: true
 }
+
+const strategy = new Strategy(customFields,
+    async function (req, jwtPayload, done) {
+
+        try {
+            const user = await authModel.findUserById(jwtPayload.id);
+            if (!user) {
+                done(null, false)
+            } else {
+                req.user = user;
+                done(null, user);
+            }
+        } catch (err) {
+            return done(new Unauthorized('Unauthorized'));
+        }
+    }
+);
+
+passport.use(strategy);
+
+export const authenticate = passport.authenticate('jwt', { session: false });
