@@ -108,7 +108,7 @@ export class OrdersService {
 				],
 				[],
 			);
-			const res = await OrderItem.bulkCreate(values, { transaction: t });
+			await OrderItem.bulkCreate(values, { transaction: t });
 			return id;
 		});
 		const order = await this.getOrderDetailsById(orderId);
