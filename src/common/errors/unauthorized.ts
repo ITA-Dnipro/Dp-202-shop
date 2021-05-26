@@ -1,7 +1,7 @@
-import  {BaseError} from './baseError';
+import { BaseError } from './baseError';
 
- export class  Unauthorized extends BaseError {
-     constructor(public error: string) {
-         super(401, error);
-     }
- } 
+export class Unauthorized extends BaseError {
+	constructor(public error: string) {
+		super(401, error);
+	}
+}

@@ -5,6 +5,7 @@ import errorHandlerMiddleware from './common/middleware/error-handler.middleware
 import sequelize from './db/config/db';
 import { productsRouter } from './modules/products/product.router';
 import { adminRouter } from './modules/admin/admin.router';
+import { ordersRouter } from './modules/orders/order.router';
 import { notFoundMiddleware } from './common/middleware/not.found.middleware';
 import { authRouter } from './modules/auth/auth.router';
 
@@ -27,6 +28,7 @@ app.use(bodyParser.json());
 
 app.use('/products', productsRouter);
 app.use('/admin', /* authMiddleware, adminMiddleWare */ adminRouter);
+app.use('/order', /* authMiddleware */ ordersRouter);
 app.use('/auth', authRouter);
 
 app.use('*', notFoundMiddleware);

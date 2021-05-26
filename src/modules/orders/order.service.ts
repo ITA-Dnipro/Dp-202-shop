@@ -7,6 +7,8 @@ import { normalize, delExtra } from '../../common/helpers/dataNormalization';
 import { Manufacture } from '../../db/models/Manufacture.model';
 import { Unit } from '../../db/models/Unit.model';
 import { Category } from '../../db/models/Category.model';
+import sequelize from '../../db/config/db';
+import { NotFound } from '../../common/errors/notFound';
 
 export enum OrderStatus {
 	New = 'new',
@@ -53,22 +55,23 @@ export class OrdersService {
 				},
 			],
 		});
-		let order = normalize(orderInfo, [
-			{
-				product: [
-					'product_name',
-					'price',
-					{ unit: ['unit'] },
-					{ category: ['category'] },
-					{ manufacture: ['manufacture'] },
-					'img',
-				],
-			},
-		]);
-		order = delExtra(order, ['product']);
-		if (user && order.length > 0)
+		if (user && orderInfo.length > 0) {
+			let order = normalize(orderInfo, [
+				{
+					product: [
+						'product_name',
+						'price',
+						{ unit: ['unit'] },
+						{ category: ['category'] },
+						{ manufacture: ['manufacture'] },
+						'img',
+					],
+				},
+			]);
+			order = delExtra(order, ['product']);
 			return [{ user: user.buyer, products: order }];
-		throw new NotFoundData([], 'Order is not found');
+		}
+		throw new NotFound('Order is not found');
 	}
 
 	async changeOrderStatus(orderId: number, status: OrderStatus) {
@@ -76,81 +79,43 @@ export class OrdersService {
 		return [{ id: orderId, status }];
 	}
 
-	// async inserOrderItems(products, id, t) {
-	// const queryArr = products.reduce((acc, product) => {
-	//     acc.push({ order_id: id, product_id: product.id, amount: product.count })
-	//     return acc;
-	// }, []);
-	// await Order_item.bulkCreate(queryArr, { transaction: t });
-	// }
+	async completeOrder(userId: number, products) {
+		const order = await this.insertItems(products, userId);
+		const total_price = order[0].products.reduce(
+			(ac, el) => ac + el.price * el.quantity,
+			0,
+		);
+		await this.updateTotalPrice(order[0].products[0].order_id, total_price);
+		return [{ ...order[0], total_price }];
+	}
 
-	// async insertOrder(user, products, t) {
-	// const { id } = user;
-	// const order = await Order.create({
-	//     user_id: id
-	// }, { transaction: t });
-	// const orderID = order.dataValues.id
-	// await this.inserOrderItems(products, orderID, t);
-	// return orderID;
-	// }
+	async insertItems(products, buyerId: number) {
+		/// //!!!!!!
+		let salesmanId = 1;
+		//
+		const orderId = await sequelize.transaction(async (t) => {
+			const orderInfo = await Order.create(
+				{ buyer_id: buyerId, salesman_id: salesmanId, total_sum: 1 },
+				{ transaction: t },
+			);
+			const { id } = orderInfo;
+			const values = products.reduce(
+				(ac, el) => [
+					...ac,
+					{ order_id: id, product_id: el.id, quantity: el.count },
+				],
+				[],
+			);
+			await OrderItem.bulkCreate(values, { transaction: t });
+			return id;
+		});
+		const order = await this.getOrderDetailsById(orderId);
+		return order;
+	}
 
-	// async selectOrderInfo(orderID) {
-	// const rawUser = await Order.findOne({
-	//     attributes: [
-	//         'time'
-	//     ],
-	//     where: { id: orderID },
-	//     include: [
-	//         {
-	//             model: User,
-	//             as: 'user',
-	//             attributes: ['user_name', 'phone', 'email']
-	//         }
-	//     ]
-	// });
-	// let user = normalizeOne(rawUser, [{ user: ['user_name', 'phone', 'email'] }]);
-	// user = deleteKeys(user, ['user'])
-	// const rawOrder = await Order_item.findAll({
-	//     attributes: [
-	//         'order_id',
-	//         'product_id',
-	//         'amount',
-	//     ],
-	//     where: { order_id: orderID },
-	//     include: [
-	//         {
-	//             model: Product,
-	//             as: 'product',
-	//             attributes: ['name', 'price'],
-	//             include: [
-	//                 {
-	//                     model: Unit,
-	//                     as: 'unit',
-	//                     attributes: ['unit']
-	//                 }
-	//             ]
-	//         }
-	//     ]
-	// });
-	// let order = normalize(rawOrder, [{ product: ['name', 'price', { unit: ['unit'] }] }]);
-	// order = delExtra(order, ['product'])
-	// order = pricePerItem(order);
-	// const orderInfo = {
-	//     'user': user,
-	//     'order': order,
-	//     'total': totalPrice(order)
-	// };
-	// return orderInfo
-	// }
-
-	// async completeOrder(user, products) {
-	// let orderID;
-	// const result = await sequelize.transaction(async (t) => {
-	//     orderID = await this.insertOrder(user, products, t)
-	// });
-	// const orderInfo = await this.selectOrderInfo(orderID);
-	// return orderInfo;
-	// }
+	async updateTotalPrice(orderId: number, total_price: number) {
+		await Order.update({ total_sum: total_price }, { where: { id: orderId } });
+	}
 }
 
 export const ordersService = new OrdersService();
