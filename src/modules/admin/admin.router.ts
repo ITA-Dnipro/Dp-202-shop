@@ -51,5 +51,6 @@ adminRouter.delete(
 	validator.params(idDto),
 	adminController.deleteProduct,
 );
+adminRouter.get('/user/:id', /* hashCheckMiddlware, */ adminController.getUser);
 
 export { adminRouter };

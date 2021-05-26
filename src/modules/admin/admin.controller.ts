@@ -147,6 +147,18 @@ class AdminController {
 			BaseView.buildSuccessView(res, deletedProduct);
 		},
 	);
+
+	getUser = asyncHandler(
+		async (
+			req: ValidatedRequestSchema,
+			res: Response,
+			next: NextFunction,
+		): Promise<void> => {
+			const { id } = req.params;
+			const user = await userService.getUserInfo(id);
+			BaseView.buildSuccessView(res, user);
+		},
+	);
 }
 
 export const adminController = new AdminController();

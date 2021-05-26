@@ -36,6 +36,23 @@ class UserService {
 		return normalize(rawUser);
 	}
 
+	async getUserInfo(userId) {
+		const user: User | null = await User.findOne({
+			attributes: [
+				'id',
+				'login',
+				'name',
+				'phone',
+				'email',
+				'balance',
+				'createdAt',
+			],
+			where: { id: userId },
+		});
+		if (user) return user;
+		throw new NotFound('User is not found');
+	}
+
 	async registerUser(user) {
 		let { login, phone, email, password, balance, name } = user;
 		const userExist = await this.checkUserExistByPhone(phone);
