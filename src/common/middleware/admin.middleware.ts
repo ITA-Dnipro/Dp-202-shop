@@ -9,27 +9,28 @@ const customFields = {
     passReqToCallback: true
 }
 
-const strategy = new Strategy(customFields,
-    async function (req, jwtPayload, done) {
+const strategy = new Strategy(customFields, 
+    async function (req,jwtPayload, done) {
 
         try {
+
             const user = await authModel.findUserById(jwtPayload.id);
             if (!user) {
-                done(null, false)
-            } else {
-                req.params.user = user;
-                done(null, user);
+                done (null,false)
+            } 
+            else if (user.role !== 'admin') {
+                done(null,false);
             }
-        } catch (err) {
-            return done(new Unauthorized('Unauthorized'));
+            else {
+                req.params.user = user;
+                done(null,user);
+            }
+        } catch(err) {
+            return done(new Unauthorized('Uncorrect token'));
         }
     }
 );
 
 passport.use(strategy);
 
-export const authenticate = passport.authenticate('jwt', { session: false });
-
-
- // Example of usage authMiddleware or adminMiddleware
- // authRouter.get('/user', adminAuth,  (req,res) => {const {user} = req.params;res.send(user)});
+export const adminAuth = passport.authenticate('jwt', {session:false});
