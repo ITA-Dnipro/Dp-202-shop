@@ -17,4 +17,5 @@ export const idDto = Joi.object().keys({
 	id: Joi.string()
 		.pattern(/^[0-9]+$/)
 		.required(),
+	user: Joi.object().optional(),
 });
