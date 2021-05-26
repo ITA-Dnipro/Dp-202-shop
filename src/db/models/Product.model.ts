@@ -25,6 +25,9 @@ export interface ProductAttributes {
 	id?: number;
 	deleted?: boolean;
 	ingredients?: string;
+	category_id?: number;
+	manufacture_id: number;
+	unit_id?: number;
 	img?: string;
 	createdAt?: Date;
 	updatedAt?: Date;
