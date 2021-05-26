@@ -16,6 +16,12 @@ import sequelize from '../../db/config/db';
 import { NotFound } from '../../common/errors/notFound';
 import { IProduct as IProductFromBody } from '../../common/dtos/new.product.dto';
 import { IProductsArray } from '../../common/dtos/orders.dto';
+import {
+	ISearchParams,
+	IWhereQuery,
+} from '../../common/dtos/search.params.dto';
+
+import { BaseError } from '../../common/errors/baseError';
 
 interface IBasicProduct extends ProductAttributes {
 	category_id: number;
@@ -281,6 +287,7 @@ export class ProductsService {
 				},
 			],
 		});
+
 		const rawProducts = normalize(dbRes, [
 			{ category: ['category'] },
 			{ unit: ['unit'] },
@@ -385,6 +392,119 @@ export class ProductsService {
 			},
 		});
 		return Boolean(dbRes);
+	}
+
+	createOrderQuery(orderParam: ISearchParams) {
+		const orderQuery = [];
+
+		if (Object.keys(orderParam).length === 0) {
+			orderQuery.push(['id', 'ASC']);
+			return orderQuery;
+		}
+
+		const { id, price } = orderParam;
+
+		if (id === 'desc') {
+			orderQuery.push(['id', 'DESC']);
+		}
+
+		if (id === 'ASC') {
+			orderQuery.push(['id', 'ASC']);
+		}
+
+		if (price === 'desc') {
+			orderQuery.push(['price', 'DESC']);
+		}
+
+		if (price === 'asc') {
+			orderQuery.push(['price', 'ASC']);
+		}
+
+		return orderQuery;
+	}
+
+	createWhereQuery(whereParam: ISearchParams): IWhereQuery {
+		const whereQuery: IWhereQuery = {
+			deleted: false,
+		};
+
+		if (Object.keys(whereParam).length === 0) {
+			return whereQuery;
+		}
+
+		const { categories, manufactures, products, status } = whereParam;
+
+		whereQuery.category_id =
+			categories === undefined
+				? { [Op.col]: 'category_id' }
+				: { [Op.in]: categories.split(',') };
+		whereQuery.product_name =
+			products === undefined
+				? { [Op.col]: 'product_name' }
+				: { [Op.iLike]: `%${products}%` };
+		whereQuery['$manufacture$'] =
+			manufactures === undefined
+				? { [Op.col]: 'manufacture' }
+				: { [Op.iLike]: `%${manufactures}%` };
+
+		if (status === 'all') {
+			whereQuery.deleted = { [Op.or]: [true, false] };
+		}
+
+		if (status === 'deleted') {
+			whereQuery.deleted = true;
+		}
+
+		return whereQuery;
+	}
+
+	async getList(queryParam: ISearchParams): Promise<Array<IProductFromBody>> {
+		const whereQuery = this.createWhereQuery(queryParam);
+		const orderQuery = this.createOrderQuery(queryParam);
+
+		const dbRes = await Product.findAll({
+			where: whereQuery,
+			order: orderQuery,
+			attributes: [
+				'id',
+				'vendor_code',
+				'product_name',
+				'amount',
+				'price',
+				'img',
+				'ingredients',
+			],
+			include: [
+				{
+					model: Category,
+					attributes: ['category'],
+				},
+				{
+					model: Manufacture,
+					attributes: ['manufacture'],
+				},
+				{
+					model: Unit,
+					attributes: ['unit'],
+				},
+				{
+					model: User,
+					attributes: ['login'],
+				},
+			],
+		});
+
+		if (dbRes.length === 0) {
+			throw new BaseError(200, 'There are no products for your request.');
+		}
+
+		const rawProducts = normalize(dbRes, [
+			{ category: ['category'] },
+			{ unit: ['unit'] },
+			{ manufacture: ['manufacture'] },
+			{ user: ['login'] },
+		]);
+		return delExtra(rawProducts, ['user']);
 	}
 }
 

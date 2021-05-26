@@ -36,8 +36,9 @@ class ProductController {
 			res: Response,
 			next: NextFunction,
 		): Promise<void> => {
-			// const products: Array<IProduct> = await productModel.getList();
-			// return BaseView.buildSuccessView(res, products);
+			const queryParam: ISearchParams = req.query;
+			const products = await productsService.getList(queryParam);
+			BaseView.buildSuccessView(res, products);
 		},
 	);
 
