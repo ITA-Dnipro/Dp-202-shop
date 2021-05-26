@@ -1,36 +1,13 @@
-import passport from 'passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
-import { Unauthorized } from '../errors/unauthorized';
-import { authModel } from '../../modules/auth/auth.service';
+import { Forbidden } from './../errors/forbidden';
 
-const customFields = {
-    jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-    secretOrKey: 'secret',
-    passReqToCallback: true
-}
+export const adminMiddleware = (req, res, next) => {
 
-const strategy = new Strategy(customFields, 
-    async function (req,jwtPayload, done) {
-
-        try {
-
-            const user = await authModel.findUserById(jwtPayload.id);
-            if (!user) {
-                done (null,false)
-            } 
-            else if (user.role !== 'admin') {
-                done(null,false);
-            }
-            else {
-                req.params.user = user;
-                done(null,user);
-            }
-        } catch(err) {
-            return done(new Unauthorized('Uncorrect token'));
-        }
+    const user = req.user;
+    if (user.role !== 'admin') {
+        next(new Forbidden('Forbidden'));
+    } else {
+        res.locals.user = user;
+        next();
     }
-);
-
-passport.use(strategy);
-
-export const adminAuth = passport.authenticate('jwt', {session:false});
+    next()
+};

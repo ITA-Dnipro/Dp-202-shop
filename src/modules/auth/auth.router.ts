@@ -6,5 +6,9 @@ const authRouter = express.Router();
 
 authRouter.post('/', validator.body(authDto), authController.login);
 
+// Example of usage
+// authRouter.get('/admin', authenticate, adminMiddleware, (req,res) => {
+//     res.send(res.locals.user);
+// });
 
 export { authRouter };

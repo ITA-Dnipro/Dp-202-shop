@@ -17,7 +17,7 @@ const strategy = new Strategy(customFields,
             if (!user) {
                 done(null, false)
             } else {
-                req.params.user = user;
+                req.user = user;
                 done(null, user);
             }
         } catch (err) {
@@ -29,7 +29,3 @@ const strategy = new Strategy(customFields,
 passport.use(strategy);
 
 export const authenticate = passport.authenticate('jwt', { session: false });
-
-
- // Example of usage authMiddleware or adminMiddleware
- // authRouter.get('/user', adminAuth,  (req,res) => {const {user} = req.params;res.send(user)});
