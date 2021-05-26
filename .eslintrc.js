@@ -38,7 +38,7 @@ module.exports = {
 			{
 				VariableDeclarator: {
 					array: false,
-					object: true,
+					object: false,
 				},
 			},
 		],
