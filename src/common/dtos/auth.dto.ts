@@ -7,6 +7,25 @@ import {
 
 export const validator = createValidator();
 
+export interface IUserRequestSchema extends ValidatedRequestSchema {
+	[ContainerTypes.Params]: {
+		user: IUser;
+	};
+}
+
+export type IUser = {
+	id: number,
+    login: string,
+    password: string,
+    email?: string,
+    balance:number,
+    name?:string,
+    phone?: string,
+    role?:string,
+    createdAt?:Date,
+    updatedAt?:Date
+};
+
 export interface IAuthRequestSchema extends ValidatedRequestSchema {
 	[ContainerTypes.Body]: {
 		login: string;
