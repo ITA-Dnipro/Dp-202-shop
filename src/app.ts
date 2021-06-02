@@ -9,6 +9,7 @@ import { userRoute } from './modules/users/user.router';
 import { ordersRouter } from './modules/orders/order.router';
 import { notFoundMiddleware } from './common/middleware/not.found.middleware';
 import { authRouter } from './modules/auth/auth.router';
+import { regRouter } from './modules/registration/reg.router';
 
 dotenv.config();
 const PORT = process.env.PORT || 3000;
@@ -32,6 +33,7 @@ app.use('/admin', /* authMiddleware, adminMiddleWare */ adminRouter);
 app.use('/user', userRoute);
 app.use('/order', /* authMiddleware */ ordersRouter);
 app.use('/auth', authRouter);
+app.use('/reg', regRouter);
 
 app.use('*', notFoundMiddleware);
 app.use(errorHandlerMiddleware);
