@@ -11,10 +11,11 @@ class UserController {
 			res: Response,
 			next: NextFunction,
 		): Promise<void> => {
-			const { id, user } = req.params;
+			const { id } = req.params;
+			const user = res.locals.user;
 			const orderDetails = await ordersService.getOrderDetailsByIdAndSalesman(
 				id,
-				user.salesman_id,
+				user.dataValues.id,
 			);
 			BaseView.buildSuccessView(res, orderDetails);
 		},
