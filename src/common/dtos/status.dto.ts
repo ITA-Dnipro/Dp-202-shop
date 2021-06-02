@@ -15,6 +15,6 @@ export interface IOrderStatus extends ValidatedRequestSchema {
 
 export const orderStatusDto = Joi.object().keys({
 	status: Joi.string()
-		.pattern(/^new|in progress|done$/)
+		.pattern(/^in progress|rejected|completed$/)
 		.required(),
 });

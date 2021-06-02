@@ -79,6 +79,19 @@ export class OrdersService {
 		return [{ id: orderId, status }];
 	}
 
+	async changeOrderStatusBySalesman(
+		orderId: number,
+		status: OrderStatus,
+		salesmanId: number,
+	) {
+		await this.getOrderDetailsById(orderId);
+		await Order.update(
+			{ status },
+			{ where: { id: orderId, salesman_id: salesmanId } },
+		);
+		return [{ id: orderId, status }];
+	}
+
 	async completeOrder(userId: number, products) {
 		const order = await this.insertItems(products, userId);
 		const total_price = order[0].products.reduce(
