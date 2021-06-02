@@ -28,6 +28,7 @@ export interface ProductAttributes {
 	category_id?: number;
 	manufacture_id: number;
 	unit_id?: number;
+	user_id?: number | void;
 	img?: string;
 	createdAt?: Date;
 	updatedAt?: Date;
