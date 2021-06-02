@@ -1,10 +1,9 @@
-// import express from 'express';
-// import { userController } from './user.controller';
+import express from 'express';
+import { authenticate } from '../../common/middleware/auth.middleware';
+import { userController } from './user.controller';
 
-// export const router = express.Router();
+const userRoute = express.Router();
 
-// router.post('/registration', userController.registration);
-// router.post('/login', userController.login);
-// router.get('/auth', userController.check);
-// router.put('/:id');
-// router.delete('/:id');
+userRoute.get('/', authenticate);
+
+export { userRoute };
