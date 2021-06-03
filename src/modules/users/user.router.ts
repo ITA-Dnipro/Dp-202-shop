@@ -1,5 +1,4 @@
 import express from 'express';
-import { validator } from '../../common/dtos/new.product.dto';
 import { authenticate } from '../../common/middleware/auth.middleware';
 import { userController } from './user.controller';
 import { salesmanMiddleware } from '../../common/middleware/salesman.middleware';
@@ -37,7 +36,7 @@ userRoute.get(
 	authenticate,
 	salesmanMiddleware,
 	userController.getOrderDetailsById,
-  );
+);
 userRoute.put(
 	'/orders/:id',
 	authenticate,
