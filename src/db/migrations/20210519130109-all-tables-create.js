@@ -259,8 +259,8 @@ const migrationCommands = [
 					allowNull: false,
 				},
 				status: {
-					type: DataType.ENUM('in progress', 'rejected', 'completed'),
-					defaultValue: 'in progress',
+					type: DataType.ENUM('IN_PROGRESS', 'REJECTED', 'COMPLETED'),
+					defaultValue: 'IN_PROGRESS',
 				},
 				buyer_id: {
 					onDelete: 'NO ACTION',
