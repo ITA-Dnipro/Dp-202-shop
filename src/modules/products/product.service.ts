@@ -349,8 +349,14 @@ export class ProductsService {
 		}
 	}
 
-	async getAllProductsExtended(): Promise<Array<IProductFromBody>> {
+	async getAllProductsExtended(
+		salesmanId?: number,
+	): Promise<Array<IProductFromBody>> {
 		const dbRes = await Product.findAll({
+			where: {
+				user_id:
+					typeof salesmanId == 'number' ? salesmanId : { [Op.col]: 'user_id' },
+			},
 			attributes: {
 				exclude: ['unit_id', 'manufacture_id', 'category_id', 'user_id'],
 			},

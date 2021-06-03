@@ -30,5 +30,11 @@ userRoute.post(
 	validator.body(newProductDto),
 	userController.addProduct,
 );
+userRoute.get(
+	'/products',
+	authenticate,
+	salesmanMiddleware,
+	userController.getSalesmanProducts,
+);
 
 export { userRoute };
