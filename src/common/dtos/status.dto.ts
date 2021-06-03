@@ -4,6 +4,7 @@ import {
 	ValidatedRequestSchema,
 	createValidator,
 } from 'express-joi-validation';
+import { ENUM } from 'sequelize';
 
 export const validator = createValidator();
 
@@ -13,8 +14,12 @@ export interface IOrderStatus extends ValidatedRequestSchema {
 	};
 }
 
+// export const orderStatusDto = Joi.object().keys({
+// 	status: Joi.string()
+// 		.pattern(/^in progress|rejected|completed$/)
+// 		.required(),
+// });
+
 export const orderStatusDto = Joi.object().keys({
-	status: Joi.string()
-		.pattern(/^in progress|rejected|completed$/)
-		.required(),
+	status: Joi.valid(...Object.values(ENUM)).required(),
 });
