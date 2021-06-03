@@ -26,6 +26,7 @@ adminRouter.put(
 	authenticate,
 	adminMiddleware,
 	validator.params(idDto),
+	validator.body(newProductDto),
 	adminController.updateProduct,
 );
 adminRouter.get(
