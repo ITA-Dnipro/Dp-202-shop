@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
+import { productsService } from './../products/product.service';
 import { json } from 'sequelize';
 import { ValidatedRequest } from 'express-joi-validation';
 import { asyncHandler } from '../../common/helpers/async.handler';
 import { BaseView } from '../../common/views/view';
 import { userService } from './user.service';
 import { INewProduct, IProduct } from '../../common/dtos/new.product.dto';
-
 import { ProductAttributes } from '../../db/models/Product.model';
 
 class UserController {
@@ -35,6 +35,11 @@ class UserController {
 			BaseView.buildSuccessView(res, updatedProduct);
 		},
 	);
-}
 
+ public addProduct = asyncHandler(async (req: ValidatedRequest<INewProduct>, res: Response): Promise<void> => {
+		const { product } = req.body;
+		const newProduct = await productsService.addNewProduct(product);
+		BaseView.buildSuccessView(res, newProduct);
+	});
+}
 export const userController = new UserController();
