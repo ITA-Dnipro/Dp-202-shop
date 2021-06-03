@@ -1,12 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import { productsService } from './../products/product.service';
 import { json } from 'sequelize';
-import { ValidatedRequest } from 'express-joi-validation';
+import { ValidatedRequest, ValidatedRequestSchema } from 'express-joi-validation';
 import { asyncHandler } from '../../common/helpers/async.handler';
 import { BaseView } from '../../common/views/view';
 import { userService } from './user.service';
 import { INewProduct, IProduct } from '../../common/dtos/new.product.dto';
 import { ProductAttributes } from '../../db/models/Product.model';
+import { ordersService } from '../orders/order.service';
 
 class UserController {
 	public getSalesmanProductById = asyncHandler(
@@ -41,5 +42,21 @@ class UserController {
 		const newProduct = await productsService.addNewProduct(product);
 		BaseView.buildSuccessView(res, newProduct);
 	});
+
+public getOrderDetailsById = asyncHandler(
+		async (
+			req: ValidatedRequestSchema,
+			res: Response,
+			next: NextFunction,
+		): Promise<void> => {
+			const { id } = req.params;
+			const user = res.locals.user;
+			const orderDetails = await ordersService.getOrderDetailsByIdAndSalesman(
+				id,
+				user.dataValues.id,
+			);
+			BaseView.buildSuccessView(res, orderDetails);
+		},
+	);
 }
 export const userController = new UserController();
