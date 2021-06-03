@@ -1,7 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { productsService } from './../products/product.service';
 import { json } from 'sequelize';
-import { ValidatedRequest, ValidatedRequestSchema } from 'express-joi-validation';
+import {
+	ValidatedRequest,
+	ValidatedRequestSchema,
+} from 'express-joi-validation';
+import { productsService } from '../products/product.service';
 import { asyncHandler } from '../../common/helpers/async.handler';
 import { BaseView } from '../../common/views/view';
 import { userService } from './user.service';
@@ -37,13 +40,18 @@ class UserController {
 		},
 	);
 
- public addProduct = asyncHandler(async (req: ValidatedRequest<INewProduct>, res: Response): Promise<void> => {
-		const { product } = req.body;
-		const newProduct = await productsService.addNewProduct(product);
-		BaseView.buildSuccessView(res, newProduct);
-	});
+	public addProduct = asyncHandler(
+		async (
+			req: ValidatedRequest<INewProduct>,
+			res: Response,
+		): Promise<void> => {
+			const { product } = req.body;
+			const newProduct = await productsService.addNewProduct(product);
+			BaseView.buildSuccessView(res, newProduct);
+		},
+	);
 
-public getOrderDetailsById = asyncHandler(
+	public getOrderDetailsById = asyncHandler(
 		async (
 			req: ValidatedRequestSchema,
 			res: Response,
@@ -59,7 +67,7 @@ public getOrderDetailsById = asyncHandler(
 		},
 	);
 
-public changeOrderStatus = asyncHandler(
+	public changeOrderStatus = asyncHandler(
 		async (
 			req: ValidatedRequestSchema,
 			res: Response,
@@ -76,5 +84,18 @@ public changeOrderStatus = asyncHandler(
 			BaseView.buildSuccessView(res, order, `Order was marked as ${status}`);
 		},
 	);
+
+	public deleteProduct = asyncHandler(
+		async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const { id } = req.params;
+			const salesmanId = res.locals.user.id;
+			const deleteProduct = await productsService.deleteProduct(
+				+id,
+				salesmanId,
+			);
+			BaseView.buildSuccessView(res, deleteProduct);
+		},
+	);
 }
+
 export const userController = new UserController();
