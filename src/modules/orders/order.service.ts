@@ -75,7 +75,7 @@ export class OrdersService {
 	}
 
 	async getOrderDetailsByIdAndSalesman(orderId: number, salesman_id: number) {
-		const user: Order | null = await Order.findOne({
+		const user: Order = await Order.findOne({
 			attributes: [],
 			where: {
 				id: orderId,
