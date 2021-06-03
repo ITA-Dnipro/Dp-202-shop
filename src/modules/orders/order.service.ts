@@ -11,9 +11,9 @@ import sequelize from '../../db/config/db';
 import { NotFound } from '../../common/errors/notFound';
 
 export enum OrderStatus {
-	New = 'new',
-	InProgress = 'in progress',
-	Done = 'done',
+	IN_PROGRESS = 'IN_PROGRESS',
+	REJECTED = 'REJECTED',
+	COMPLETED = 'COMPLETED',
 }
 
 export class OrdersService {
@@ -27,6 +27,60 @@ export class OrdersService {
 		const user: Order | null = await Order.findOne({
 			attributes: [],
 			where: { id: orderId },
+			include: [
+				{
+					model: User,
+					as: 'buyer',
+					attributes: ['login', 'name', 'phone', 'email'],
+				},
+			],
+		});
+		const orderInfo: Array<OrderItem> = await OrderItem.findAll({
+			attributes: ['order_id', 'product_id', 'quantity'],
+			where: { order_id: orderId },
+			include: [
+				{
+					model: Product,
+					as: 'product',
+					attributes: ['product_name', 'price', 'img'],
+					include: [
+						{ model: Unit, as: 'unit', attributes: ['unit'] },
+						{ model: Category, as: 'category', attributes: ['category'] },
+						{
+							model: Manufacture,
+							as: 'manufacture',
+							attributes: ['manufacture'],
+						},
+					],
+				},
+			],
+		});
+		if (user && orderInfo.length > 0) {
+			let order = normalize(orderInfo, [
+				{
+					product: [
+						'product_name',
+						'price',
+						{ unit: ['unit'] },
+						{ category: ['category'] },
+						{ manufacture: ['manufacture'] },
+						'img',
+					],
+				},
+			]);
+			order = delExtra(order, ['product']);
+			return [{ user: user.buyer, products: order }];
+		}
+		throw new NotFound('Order is not found');
+	}
+
+	async getOrderDetailsByIdAndSalesman(orderId: number, salesman_id: number) {
+		const user: Order = await Order.findOne({
+			attributes: [],
+			where: {
+				id: orderId,
+				salesman_id,
+			},
 			include: [
 				{
 					model: User,

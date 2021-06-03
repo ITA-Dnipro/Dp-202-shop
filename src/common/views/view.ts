@@ -1,11 +1,7 @@
 import { Response } from 'express';
 
 export class BaseView {
-	public static buildSuccessView(
-		res: Response,
-		data: any,
-		message = '',
-	): Response {
+	public static buildSuccessView(res: Response, data: any, message: string = ''): Response {
 		const response = {
 			status: 'ok',
 			data,
