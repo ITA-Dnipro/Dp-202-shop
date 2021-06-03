@@ -7,6 +7,18 @@ import { newProductDto, validator } from '../../common/dtos/new.product.dto';
 const userRoute = express.Router();
 
 userRoute.get('/', authenticate);
-userRoute.post('/add', authenticate, salesmanMiddleware,  validator.body(newProductDto), userController.addProduct);
+userRoute.post(
+	'/add',
+	authenticate,
+	salesmanMiddleware,
+	validator.body(newProductDto),
+	userController.addProduct,
+);
+userRoute.get(
+	'/orders',
+	authenticate,
+	salesmanMiddleware,
+	userController.getOrders,
+);
 
 export { userRoute };
