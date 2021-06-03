@@ -11,9 +11,9 @@ import sequelize from '../../db/config/db';
 import { NotFound } from '../../common/errors/notFound';
 
 export enum OrderStatus {
-	New = 'new',
-	InProgress = 'in progress',
-	Done = 'done',
+	IN_PROGRESS = 'IN_PROGRESS',
+	REJECTED = 'REJECTED',
+	COMPLETED = 'COMPLETED',
 }
 
 export class OrdersService {
