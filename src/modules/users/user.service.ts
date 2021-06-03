@@ -133,13 +133,13 @@ class UserService {
 		productId: number,
 		product: IProductFromBody,
 	): Promise<Array<ProductAttributes> | void> {
-		const isExist = await productsService.idIsExist(
+		const isProductExist = await productsService.idIsExist(
 			productId,
 			true,
 			salesmanId,
 		);
 
-		if (!isExist) {
+		if (!isProductExist) {
 			throw new NotFoundData([{ productId }], "This product doesn't exist");
 		}
 
