@@ -140,7 +140,13 @@ const migrationCommands = [
 					allowNull: false,
 				},
 				role: {
-					type: DataType.ENUM(['client', 'salesman', 'admin']),
+					type: DataType.ENUM(
+						'client',
+						'salesman',
+						'admin',
+						'pending',
+						'rejected',
+					),
 					defaultValue: 'client',
 				},
 				createdAt: {
@@ -259,8 +265,8 @@ const migrationCommands = [
 					allowNull: false,
 				},
 				status: {
-					type: DataType.ENUM('IN_PROGRESS', 'REJECTED', 'COMPLETED'),
-					defaultValue: 'IN_PROGRESS',
+					type: DataType.ENUM('in progress', 'rejected', 'completed'),
+					defaultValue: 'in progress',
 				},
 				buyer_id: {
 					onDelete: 'NO ACTION',
