@@ -1,3 +1,4 @@
+import { Order } from './../../db/models/Order.model';
 import { Op } from 'sequelize';
 import { User, UserAttributes } from '../../db/models/User.model';
 import {
@@ -5,7 +6,6 @@ import {
 	normalizeOne,
 } from '../../common/helpers/dataNormalization';
 import { Forbidden } from '../../common/errors/forbidden';
-
 import { NotFound } from '../../common/errors/notFound';
 import { productsService } from '../products/product.service';
 import { NotFoundData } from '../../common/errors/notFoundData';
@@ -25,20 +25,6 @@ interface IUserOptionalAttributes {
 }
 
 class UserService {
-	async checkUserExistByPhone(phone) {
-		const foundUser = await this.findUserByPhone(phone);
-		return Boolean(foundUser.length);
-	}
-
-	async findUserByPhone(phoneNum) {
-		const rawUser = await User.findAll({
-			attributes: ['id', 'user_name', 'phone', 'password', 'email'],
-			where: {
-				phone: phoneNum,
-			},
-		});
-		return normalize(rawUser);
-	}
 
 	async getUserInfo(userId) {
 		const user: User | null = await User.findOne({
@@ -55,27 +41,6 @@ class UserService {
 		});
 		if (user) return user;
 		throw new NotFound('User is not found');
-	}
-
-	async registerUser(user) {
-		let { login, phone, email, password, balance, name } = user;
-		const userExist = await this.checkUserExistByPhone(phone);
-		if (userExist) {
-			throw new Forbidden('Such phone is registered');
-		}
-		if (!email) {
-			email = null;
-		}
-		const newUser = await User.create({
-			login,
-			password,
-			email,
-			balance,
-			name,
-			phone,
-			role: 'client',
-		});
-		return normalizeOne(newUser).id;
 	}
 
 	async getSalesmanIdByLogin(login: string): Promise<number | void> {
@@ -107,6 +72,23 @@ class UserService {
 		});
 		return normalize(rawSalesmenData);
 	}
+	
+	async getOrdersById(id: number) {
+		const orders = await Order.findAll({
+			attributes: [
+				'id',
+				'total_sum',
+				'status',
+				'buyer_id',
+				'salesman_id',
+				'createdAt',
+			],
+			where: {
+				salesman_id: id,
+			},
+		});
+		return orders;
+  }
 
 	async getSalesmanProductById(
 		salesmanId: number,

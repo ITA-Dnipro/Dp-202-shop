@@ -10,6 +10,23 @@ import { ProductAttributes } from '../../db/models/Product.model';
 import { ordersService } from '../orders/order.service';
 
 class UserController {
+
+	public getOrders = asyncHandler(
+		async (req: Request, res: Response): Promise<void> => {
+			const { id } = res.locals.user;
+			const orders = await userService.getOrdersById(id);
+			if (orders.length > 0) {
+				BaseView.buildSuccessView(res, orders);
+			} else {
+				BaseView.buildSuccessView(
+					res,
+					orders,
+					'You have no orders at the moment',
+				);
+			}
+		},
+	);
+
 	public getSalesmanProductById = asyncHandler(
 		async (req: Request, res: Response, next: NextFunction): Promise<void> => {
 			const salesmanId: number = res.locals.user.id;
@@ -60,6 +77,9 @@ class UserController {
 					products,
 					'You have no products at the moment',
 				);
+      }
+	},
+);
 			
 public getOrderDetailsById = asyncHandler(
 		async (
