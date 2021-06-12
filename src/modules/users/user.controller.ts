@@ -47,7 +47,7 @@ class UserController {
 		},
 	);
 
-	getSalesmanProducts = asyncHandler(
+	public getSalesmanProducts = asyncHandler(
 		async (req: Request, res: Response): Promise<void> => {
 			const { id } = res.locals.user;
 			const products = await productsService.getAllProductsExtended(id);
