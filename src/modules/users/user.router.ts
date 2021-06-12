@@ -2,6 +2,7 @@ import express from 'express';
 import { authenticate } from '../../common/middleware/auth.middleware';
 import { userController } from './user.controller';
 import { salesmanMiddleware } from '../../common/middleware/salesman.middleware';
+import { orderStatusDto } from '../../common/dtos/status.dto';
 import { idDto } from '../../common/dtos/id.dto';
 import { newProductDto, validator } from '../../common/dtos/new.product.dto';
 
@@ -35,6 +36,19 @@ userRoute.get(
 	authenticate,
 	salesmanMiddleware,
 	userController.getSalesmanProducts,
+);
+userRoute.get(
+	'/orders/:id',
+	authenticate,
+	salesmanMiddleware,
+	userController.getOrderDetailsById,
+);
+userRoute.put(
+	'/orders/:id',
+	authenticate,
+	salesmanMiddleware,
+	validator.body(orderStatusDto),
+	userController.changeOrderStatus,
 );
 
 export { userRoute };
