@@ -6,8 +6,11 @@ import {
 	normalizeOne,
 } from '../../common/helpers/dataNormalization';
 import { Forbidden } from '../../common/errors/forbidden';
-
 import { NotFound } from '../../common/errors/notFound';
+import { productsService } from '../products/product.service';
+import { NotFoundData } from '../../common/errors/notFoundData';
+import { IProduct as IProductFromBody } from '../../common/dtos/new.product.dto';
+import { ProductAttributes } from '../../db/models/Product.model';
 
 export enum UserRole {
 	Admin = 'admin',
@@ -85,6 +88,47 @@ class UserService {
 			},
 		});
 		return orders;
+  }
+
+	async getSalesmanProductById(
+		salesmanId: number,
+		productId: number,
+	): Promise<IProductFromBody> {
+		const isExist = await productsService.idIsExist(
+			productId,
+			true,
+			salesmanId,
+		);
+
+		if (!isExist) {
+			throw new NotFoundData([{ productId }], "This product doesn't exist");
+		}
+
+		const product: IProductFromBody =
+			await productsService.getOneProductByIdExtended(productId);
+
+		return product;
+	}
+
+	async editSalesmanProduct(
+		salesmanId: number,
+		productId: number,
+		product: IProductFromBody,
+	): Promise<Array<ProductAttributes> | void> {
+		const isProductExist = await productsService.idIsExist(
+			productId,
+			true,
+			salesmanId,
+		);
+
+		if (!isProductExist) {
+			throw new NotFoundData([{ productId }], "This product doesn't exist");
+		}
+
+		const updatedProduct: Array<ProductAttributes> | void =
+			await productsService.updateProduct(productId, product);
+
+		return updatedProduct;
 	}
 }
 

@@ -223,7 +223,7 @@ export class ProductsService {
 	): Promise<Array<ProductAttributes> | void> {
 		const idExist = await this.idIsExist(id, true);
 		if (!idExist) {
-			throw new NotFoundData([{ id }], 'This doesnt exist');
+			throw new NotFoundData([{ id }], 'This product doesnt exist');
 		}
 		const result = await sequelize.transaction(async (t) => {
 			const productForDB = await this.replaceDataWithForeignKeys(
@@ -241,7 +241,7 @@ export class ProductsService {
 
 	async deleteProduct(id: number) {
 		const idExist = await this.idIsExist(id, true);
-		if (!idExist) throw new NotFoundData([{ id }], 'This doesnt exist');
+		if (!idExist) throw new NotFoundData([{ id }], 'This product doesnt exist');
 		const idDeleted = await this.idIsExist(id, false);
 		if (!idDeleted)
 			throw new NotFoundData([{ id }], 'This id is already deleted');
@@ -303,7 +303,7 @@ export class ProductsService {
 	): Promise<IProductFromBody> {
 		const isExist = await this.idIsExist(id, showDeleted);
 		if (!isExist) {
-			throw new NotFoundData([{ id }], "Id doesn't exist");
+			throw new NotFoundData([{ id }], "This product doesn't exist");
 		} else {
 			const dbRes = await Product.findOne({
 				where: {
@@ -349,8 +349,14 @@ export class ProductsService {
 		}
 	}
 
-	async getAllProductsExtended(): Promise<Array<IProductFromBody>> {
+	async getAllProductsExtended(
+		salesmanId?: number,
+	): Promise<Array<IProductFromBody>> {
 		const dbRes = await Product.findAll({
+			where: {
+				user_id:
+					typeof salesmanId == 'number' ? salesmanId : { [Op.col]: 'user_id' },
+			},
 			attributes: {
 				exclude: ['unit_id', 'manufacture_id', 'category_id', 'user_id'],
 			},
@@ -384,11 +390,17 @@ export class ProductsService {
 		return delExtra(rawProducts, ['user']);
 	}
 
-	async idIsExist(id: number, showDeleted: boolean): Promise<boolean> {
+	async idIsExist(
+		id: number,
+		showDeleted: boolean,
+		salesmanId?: number,
+	): Promise<boolean> {
 		const dbRes = await Product.findOne({
 			where: {
 				id,
 				deleted: showDeleted ? { [Op.or]: [true, false] } : showDeleted,
+				user_id:
+					typeof salesmanId === 'number' ? salesmanId : { [Op.col]: 'user_id' },
 			},
 		});
 		return Boolean(dbRes);
@@ -505,6 +517,43 @@ export class ProductsService {
 			{ user: ['login'] },
 		]);
 		return delExtra(rawProducts, ['user']);
+	}
+
+	async getOneProductByIdExtended(id: number) {
+		const dbRes = await Product.findOne({
+			where: {
+				id,
+			},
+			attributes: {
+				exclude: ['unit_id', 'manufacture_id', 'category_id', 'user_id'],
+			},
+			include: [
+				{
+					model: Category,
+					attributes: ['category'],
+				},
+				{
+					model: Manufacture,
+					attributes: ['manufacture'],
+				},
+				{
+					model: Unit,
+					attributes: ['unit'],
+				},
+				{
+					model: User,
+					attributes: ['login'],
+				},
+			],
+		});
+
+		const rawProduct = normalizeOne(dbRes, [
+			{ category: ['category'] },
+			{ unit: ['unit'] },
+			{ user: ['login'] },
+			{ manufacture: ['manufacture'] },
+		]);
+		return deleteKeys(rawProduct, ['user']);
 	}
 }
 
