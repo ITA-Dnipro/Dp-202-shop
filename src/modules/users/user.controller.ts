@@ -37,12 +37,30 @@ class UserController {
 		},
 	);
 
- public addProduct = asyncHandler(async (req: ValidatedRequest<INewProduct>, res: Response): Promise<void> => {
-		const { product } = req.body;
-		const newProduct = await productsService.addNewProduct(product);
-		BaseView.buildSuccessView(res, newProduct);
-	});
+	public addProduct = asyncHandler(
+		async (
+			req: ValidatedRequest<INewProduct>,
+			res: Response,
+		): Promise<void> => {
+			const { product } = req.body;
+			const newProduct = await productsService.addNewProduct(product);
+			BaseView.buildSuccessView(res, newProduct);
+		},
+	);
 
+	public getSalesmanProducts = asyncHandler(
+		async (req: Request, res: Response): Promise<void> => {
+			const { id } = res.locals.user;
+			const products = await productsService.getAllProductsExtended(id);
+			if (products.length > 0) {
+				BaseView.buildSuccessView(res, products);
+			} else {
+				BaseView.buildSuccessView(
+					res,
+					products,
+					'You have no products at the moment',
+				);
+			
 public getOrderDetailsById = asyncHandler(
 		async (
 			req: ValidatedRequestSchema,
