@@ -32,6 +32,18 @@ userRoute.post(
 	userController.addProduct,
 );
 userRoute.get(
+	'/orders',
+	authenticate,
+	salesmanMiddleware,
+	userController.getOrders,
+);
+userRoute.get(
+	'/products',
+	authenticate,
+	salesmanMiddleware,
+	userController.getSalesmanProducts,
+);
+userRoute.get(
 	'/orders/:id',
 	authenticate,
 	salesmanMiddleware,
