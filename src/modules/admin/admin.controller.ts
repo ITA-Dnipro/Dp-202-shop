@@ -173,9 +173,9 @@ class AdminController {
 			res: Response,
 			next: NextFunction,
 		): Promise<void> => {
-			const role = req.body.status;
+			const status = req.body.status;
 			const userId = req.body.id;
-			const result: string = await userService.approveSalesman(userId, role);
+			const result: string = await userService.approveSalesman(userId, status);
 			BaseView.buildSuccessView(res, [], result);
 		},
 	);

@@ -13,6 +13,7 @@ import { NotFoundData } from '../../common/errors/notFoundData';
 import { IProduct as IProductFromBody } from '../../common/dtos/new.product.dto';
 import { ProductAttributes } from '../../db/models/Product.model';
 import { BaseError } from '../../common/errors/baseError';
+import { IUserData } from '../../common/dtos/user.role.dto';
 
 export enum UserRole {
 	Client = 'client',
