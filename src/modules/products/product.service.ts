@@ -455,7 +455,7 @@ export class ProductsService {
 			products === undefined
 				? { [Op.col]: 'product_name' }
 				: { [Op.iLike]: `%${products}%` };
-		whereQuery.$manufacture$ =
+		whereQuery['$manufacture$'] =
 			manufactures === undefined
 				? { [Op.col]: 'manufacture' }
 				: { [Op.iLike]: `%${manufactures}%` };
