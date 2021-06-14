@@ -10,7 +10,6 @@ import { INewProduct } from '../../common/dtos/new.product.dto';
 import { userService, UserRole } from '../users/user.service';
 import { ordersService } from '../orders/order.service';
 import { IUserRoleBody } from '../../common/dtos/user.role.dto';
-
 import { IId } from '../../common/dtos/id.dto';
 
 class AdminController {
@@ -174,9 +173,9 @@ class AdminController {
 			res: Response,
 			next: NextFunction,
 		): Promise<void> => {
-			const status = req.body.status;
+			const role = req.body.status;
 			const userId = req.body.id;
-			const result: string = await userService.approveSalesman(userId, status);
+			const result: string = await userService.approveSalesman(userId, role);
 			BaseView.buildSuccessView(res, [], result);
 		},
 	);

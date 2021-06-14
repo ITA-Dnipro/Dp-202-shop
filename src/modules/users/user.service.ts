@@ -5,14 +5,13 @@ import {
 	normalizeOne,
 } from '../../common/helpers/dataNormalization';
 import { Forbidden } from '../../common/errors/forbidden';
-
+import { EStatus, IUserData } from '../../common/dtos/user.role.dto';
 import { NotFound } from '../../common/errors/notFound';
 import { productsService } from '../products/product.service';
 import { NotFoundData } from '../../common/errors/notFoundData';
 import { IProduct as IProductFromBody } from '../../common/dtos/new.product.dto';
 import { ProductAttributes } from '../../db/models/Product.model';
 import { BaseError } from '../../common/errors/baseError';
-import { IUserData } from '../../common/dtos/user.role.dto';
 
 export enum UserRole {
 	Client = 'client',
@@ -163,7 +162,7 @@ class UserService {
 
 		if (roleReq.length === 0) {
 			throw new BaseError(
-				200,
+				400,
 				'At this moment no request for approve role salesman',
 			);
 		}
@@ -171,9 +170,9 @@ class UserService {
 		return roleReq;
 	}
 
-	async approveSalesman(idUser: number, status: string): Promise<string> {
+	async approveSalesman(idUser: number, role: EStatus): Promise<string> {
 		const userData: IUserData = {
-			role: status,
+			role,
 		};
 
 		await User.update(userData, {
@@ -183,7 +182,7 @@ class UserService {
 			},
 		});
 
-		return `The status has been successfully updated to ${status}`;
+		return `The status has been successfully updated to ${role}`;
 	}
 }
 
