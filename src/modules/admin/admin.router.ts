@@ -5,6 +5,7 @@ import { idDto } from '../../common/dtos/id.dto';
 import { orderStatusDto } from '../../common/dtos/status.dto';
 import { authenticate } from '../../common/middleware/auth.middleware';
 import { adminMiddleware } from '../../common/middleware/admin.middleware';
+import { userRoleDto } from '../../common/dtos/user.role.dto';
 
 const adminRouter = express.Router();
 
@@ -87,6 +88,19 @@ adminRouter.get(
 	authenticate,
 	adminMiddleware,
 	adminController.getUser,
+);
+adminRouter.get(
+	'/pending-req/',
+	authenticate,
+	adminMiddleware,
+	adminController.getSalesmanRoleReq,
+);
+adminRouter.put(
+	'/pending-req/',
+	authenticate,
+	adminMiddleware,
+	validator.body(userRoleDto),
+	adminController.approveSalesman,
 );
 
 export { adminRouter };

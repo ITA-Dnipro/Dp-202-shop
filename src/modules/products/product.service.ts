@@ -239,16 +239,23 @@ export class ProductsService {
 		return result;
 	}
 
-	async deleteProduct(id: number) {
-		const idExist = await this.idIsExist(id, true);
-		if (!idExist) throw new NotFoundData([{ id }], 'This product doesnt exist');
-		const idDeleted = await this.idIsExist(id, false);
+	async deleteProduct(idProduct: number, idSalesman?: number) {
+		const idExist = await this.idIsExist(idProduct, true, idSalesman);
+		if (!idExist)
+			throw new NotFoundData([{ idProduct }], 'This product doesnt exist');
+		const idDeleted = await this.idIsExist(idProduct, false, idSalesman);
 		if (!idDeleted)
-			throw new NotFoundData([{ id }], 'This id is already deleted');
+			throw new NotFoundData([{ idProduct }], 'This id is already deleted');
 		const deletedProduct = await Product.update(
 			{ deleted: true },
 			{
-				where: { id },
+				where: {
+					id: idProduct,
+					user_id:
+						typeof idSalesman === 'number'
+							? idSalesman
+							: { [Op.col]: 'user_id' },
+				},
 				returning: true,
 			},
 		);

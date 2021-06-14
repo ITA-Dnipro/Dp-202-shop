@@ -56,5 +56,12 @@ userRoute.put(
 	validator.body(orderStatusDto),
 	userController.changeOrderStatus,
 );
+userRoute.put(
+	'/delete/:id',
+	authenticate,
+	salesmanMiddleware,
+	validator.params(idDto),
+	userController.deleteProduct,
+);
 
 export { userRoute };

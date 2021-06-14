@@ -6,16 +6,20 @@ import {
 	normalizeOne,
 } from '../../common/helpers/dataNormalization';
 import { Forbidden } from '../../common/errors/forbidden';
+import { EStatus, IUserData } from '../../common/dtos/user.role.dto';
 import { NotFound } from '../../common/errors/notFound';
 import { productsService } from '../products/product.service';
 import { NotFoundData } from '../../common/errors/notFoundData';
 import { IProduct as IProductFromBody } from '../../common/dtos/new.product.dto';
 import { ProductAttributes } from '../../db/models/Product.model';
+import { BaseError } from '../../common/errors/baseError';
 
 export enum UserRole {
+	Client = 'client',
 	Admin = 'admin',
 	Salesman = 'salesman',
-	Client = 'client',
+	Pending = 'pending',
+	Rejected = 'rejected',
 }
 
 type UserKeyAttributes = keyof UserAttributes;
@@ -129,6 +133,39 @@ class UserService {
 			await productsService.updateProduct(productId, product);
 
 		return updatedProduct;
+	}
+
+	async getSalesmanRoleReq(): Promise<Array<UserAttributes>> {
+		const roleReq = await User.findAll({
+			where: {
+				role: UserRole.Pending,
+			},
+			attributes: ['id', 'login', 'role'],
+		});
+
+		if (roleReq.length === 0) {
+			throw new BaseError(
+				400,
+				'At this moment no request for approve role salesman',
+			);
+		}
+
+		return roleReq;
+	}
+
+	async approveSalesman(idUser: number, role: EStatus): Promise<string> {
+		const userData: IUserData = {
+			role,
+		};
+
+		await User.update(userData, {
+			returning: true,
+			where: {
+				id: idUser,
+			},
+		});
+
+		return `The status has been successfully updated to ${role}`;
 	}
 }
 
