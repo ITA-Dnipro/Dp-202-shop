@@ -1,5 +1,5 @@
-import { Order } from './../../db/models/Order.model';
 import { Op } from 'sequelize';
+import { Order } from '../../db/models/Order.model';
 import { User, UserAttributes } from '../../db/models/User.model';
 import {
 	normalize,
@@ -13,7 +13,6 @@ import { NotFoundData } from '../../common/errors/notFoundData';
 import { IProduct as IProductFromBody } from '../../common/dtos/new.product.dto';
 import { ProductAttributes } from '../../db/models/Product.model';
 import { BaseError } from '../../common/errors/baseError';
-import { IUserData } from '../../common/dtos/user.role.dto';
 
 export enum UserRole {
 	Client = 'client',
@@ -30,7 +29,6 @@ interface IUserOptionalAttributes {
 }
 
 class UserService {
-
 	async getUserInfo(userId) {
 		const user: User | null = await User.findOne({
 			attributes: [
@@ -77,7 +75,7 @@ class UserService {
 		});
 		return normalize(rawSalesmenData);
 	}
-	
+
 	async getOrdersById(id: number) {
 		const orders = await Order.findAll({
 			attributes: [
@@ -93,7 +91,7 @@ class UserService {
 			},
 		});
 		return orders;
-  }
+	}
 
 	async getSalesmanProductById(
 		salesmanId: number,
