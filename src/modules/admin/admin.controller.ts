@@ -10,7 +10,6 @@ import { INewProduct } from '../../common/dtos/new.product.dto';
 import { userService, UserRole } from '../users/user.service';
 import { ordersService } from '../orders/order.service';
 import { IUserRoleBody } from '../../common/dtos/user.role.dto';
-
 import { IId } from '../../common/dtos/id.dto';
 
 class AdminController {

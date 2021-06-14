@@ -7,15 +7,20 @@ import {
 
 export const validator = createValidator();
 
+export enum EStatus {
+	rejected = 'rejected',
+	salesman = 'salesman',
+}
+
 export interface IUserRoleBody extends ValidatedRequestSchema {
 	[ContainerTypes.Body]: {
-		status: string;
+		status: EStatus;
 		id: number;
 	};
 }
 
 export interface IUserData {
-	role: string;
+	role: EStatus;
 }
 
 export const userRoleDto = Joi.object({

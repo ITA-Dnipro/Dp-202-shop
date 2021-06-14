@@ -32,6 +32,18 @@ userRoute.post(
 	userController.addProduct,
 );
 userRoute.get(
+	'/orders',
+	authenticate,
+	salesmanMiddleware,
+	userController.getOrders,
+);
+userRoute.get(
+	'/products',
+	authenticate,
+	salesmanMiddleware,
+	userController.getSalesmanProducts,
+);
+userRoute.get(
 	'/orders/:id',
 	authenticate,
 	salesmanMiddleware,
@@ -43,6 +55,13 @@ userRoute.put(
 	salesmanMiddleware,
 	validator.body(orderStatusDto),
 	userController.changeOrderStatus,
+);
+userRoute.put(
+	'/delete/:id',
+	authenticate,
+	salesmanMiddleware,
+	validator.params(idDto),
+	userController.deleteProduct,
 );
 
 export { userRoute };
