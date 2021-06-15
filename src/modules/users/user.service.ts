@@ -18,8 +18,12 @@ export enum UserRole {
 	Client = 'client',
 	Admin = 'admin',
 	Salesman = 'salesman',
+}
+
+enum UserStatus {
 	Pending = 'pending',
 	Rejected = 'rejected',
+	Approve = 'approve',
 }
 
 type UserKeyAttributes = keyof UserAttributes;
@@ -137,9 +141,9 @@ class UserService {
 	async getSalesmanRoleReq(): Promise<Array<UserAttributes>> {
 		const roleReq = await User.findAll({
 			where: {
-				role: UserRole.Pending,
+				status: UserStatus.Pending,
 			},
-			attributes: ['id', 'login', 'role'],
+			attributes: ['id', 'login', 'role', 'status'],
 		});
 
 		if (roleReq.length === 0) {
@@ -152,10 +156,15 @@ class UserService {
 		return roleReq;
 	}
 
-	async approveSalesman(idUser: number, role: EStatus): Promise<string> {
+	async approveSalesman(idUser: number, status: EStatus): Promise<string> {
 		const userData: IUserData = {
-			role,
+			status,
+			role: 'client',
 		};
+
+		if (status === 'approve') {
+			userData.role = 'salesman';
+		}
 
 		await User.update(userData, {
 			returning: true,
@@ -164,7 +173,7 @@ class UserService {
 			},
 		});
 
-		return `The status has been successfully updated to ${role}`;
+		return `The status has been successfully updated to ${status}`;
 	}
 }
 

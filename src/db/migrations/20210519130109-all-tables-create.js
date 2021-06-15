@@ -140,14 +140,12 @@ const migrationCommands = [
 					allowNull: false,
 				},
 				role: {
-					type: DataType.ENUM(
-						'client',
-						'salesman',
-						'admin',
-						'pending',
-						'rejected',
-					),
+					type: DataType.ENUM('client', 'salesman', 'admin'),
 					defaultValue: 'client',
+				},
+				status: {
+					type: DataType.ENUM('default', 'pending', 'rejected', 'approve'),
+					defaultValue: 'default',
 				},
 				createdAt: {
 					type: DataType.DATE,

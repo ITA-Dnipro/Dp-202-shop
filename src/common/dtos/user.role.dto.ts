@@ -9,7 +9,7 @@ export const validator = createValidator();
 
 export enum EStatus {
 	rejected = 'rejected',
-	salesman = 'salesman',
+	approve = 'approve',
 }
 
 export interface IUserRoleBody extends ValidatedRequestSchema {
@@ -20,10 +20,11 @@ export interface IUserRoleBody extends ValidatedRequestSchema {
 }
 
 export interface IUserData {
-	role: EStatus;
+	status: EStatus;
+	role: string;
 }
 
 export const userRoleDto = Joi.object({
-	status: Joi.string().valid('rejected', 'salesman').required(),
+	status: Joi.string().valid('rejected', 'approve').required(),
 	id: Joi.number().positive().required(),
 });
