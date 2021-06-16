@@ -56,9 +56,9 @@ export class Order extends Model<OrderAttributes, OrderCreationAttributes> {
 	})
 	total_sum: number;
 
-	@Default('new')
+	@Default('in progress')
 	@Column({
-		type: DataType.ENUM('new', 'in progress', 'done'),
+		type: DataType.ENUM('in progress', 'rejected', 'completed'),
 	})
 	status: string;
 

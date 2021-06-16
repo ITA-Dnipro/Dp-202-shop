@@ -1,10 +1,67 @@
-// import express from 'express';
-// import { userController } from './user.controller';
+import express from 'express';
+import { authenticate } from '../../common/middleware/auth.middleware';
+import { userController } from './user.controller';
+import { salesmanMiddleware } from '../../common/middleware/salesman.middleware';
+import { orderStatusDto } from '../../common/dtos/status.dto';
+import { idDto } from '../../common/dtos/id.dto';
+import { newProductDto, validator } from '../../common/dtos/new.product.dto';
 
-// export const router = express.Router();
+const userRoute = express.Router();
 
-// router.post('/registration', userController.registration);
-// router.post('/login', userController.login);
-// router.get('/auth', userController.check);
-// router.put('/:id');
-// router.delete('/:id');
+userRoute.get('/', authenticate);
+userRoute.get(
+	'/edit/:id',
+	authenticate,
+	salesmanMiddleware,
+	validator.params(idDto),
+	userController.getSalesmanProductById,
+);
+userRoute.put(
+	'/edit/:id',
+	authenticate,
+	salesmanMiddleware,
+	validator.params(idDto),
+	validator.body(newProductDto),
+	userController.editSalesmanProduct,
+);
+userRoute.post(
+	'/add',
+	authenticate,
+	salesmanMiddleware,
+	validator.body(newProductDto),
+	userController.addProduct,
+);
+userRoute.get(
+	'/orders',
+	authenticate,
+	salesmanMiddleware,
+	userController.getOrders,
+);
+userRoute.get(
+	'/products',
+	authenticate,
+	salesmanMiddleware,
+	userController.getSalesmanProducts,
+);
+userRoute.get(
+	'/orders/:id',
+	authenticate,
+	salesmanMiddleware,
+	userController.getOrderDetailsById,
+);
+userRoute.put(
+	'/orders/:id',
+	authenticate,
+	salesmanMiddleware,
+	validator.body(orderStatusDto),
+	userController.changeOrderStatus,
+);
+userRoute.put(
+	'/delete/:id',
+	authenticate,
+	salesmanMiddleware,
+	validator.params(idDto),
+	userController.deleteProduct,
+);
+
+export { userRoute };

@@ -9,7 +9,7 @@ import { productsService } from '../products/product.service';
 import { INewProduct } from '../../common/dtos/new.product.dto';
 import { userService, UserRole } from '../users/user.service';
 import { ordersService } from '../orders/order.service';
-
+import { IUserRoleBody } from '../../common/dtos/user.role.dto';
 import { IId } from '../../common/dtos/id.dto';
 
 class AdminController {
@@ -157,6 +157,26 @@ class AdminController {
 			const { id } = req.params;
 			const user = await userService.getUserInfo(id);
 			BaseView.buildSuccessView(res, user);
+		},
+	);
+
+	getSalesmanRoleReq = asyncHandler(
+		async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+			const roleReq = await userService.getSalesmanRoleReq();
+			BaseView.buildSuccessView(res, roleReq);
+		},
+	);
+
+	approveSalesman = asyncHandler(
+		async (
+			req: ValidatedRequest<IUserRoleBody>,
+			res: Response,
+			next: NextFunction,
+		): Promise<void> => {
+			const status = req.body.status;
+			const userId = req.body.id;
+			const result: string = await userService.approveSalesman(userId, status);
+			BaseView.buildSuccessView(res, [], result);
 		},
 	);
 }
