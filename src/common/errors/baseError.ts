@@ -1,7 +1,7 @@
 export interface IError {
 	message: string;
 	data?: any[];
-	status?: number;
+	statusCode?: number;
 	error: any;
 }
 
